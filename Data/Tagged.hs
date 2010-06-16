@@ -36,7 +36,8 @@ import Data.Foldable (Foldable(..))
 import Data.Monoid (Monoid(..))
 import Data.Default (Default(..))
 import Data.Data (Data,Typeable)
-import Data.Ix (Ix)
+import Data.Ix (Ix(..))
+import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Text.Read
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
@@ -127,26 +128,13 @@ asTaggedTypeOf :: s -> Tagged s b -> s
 asTaggedTypeOf = const
 {-# INLINE asTaggedTypeOf #-}
 
--- | 'selfUntag' 
+-- | 'untagSelf' is a type-restricted version of 'untag'.
 untagSelf :: Tagged a a -> a
 untagSelf (Tagged x) = x
 {-# INLINE untagSelf #-}
 
 data Proxy p = Proxy
-    -- deriving (Eq,Ord,Ix,Show,Read)
-
-{- 
-Work around for the following GHC bug with deriving:
-
-Data/Tagged.hs:1:0:
-    Expecting an ordinary type, but found a type of kind * -> *
-    In an expression type signature: Proxy
-    In the expression: ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
-    In the definition of `Data.Tagged.$tag2con_Proxy':
-        Data.Tagged.$tag2con_Proxy (ghc-prim:GHC.Types.I# a)
-                                     = ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
-
--}
+    deriving (Eq,Ord,Show,Read,Data,Typeable)
 
 instance Enum (Proxy s) where
     succ _ = error "Proxy.succ"
@@ -158,6 +146,27 @@ instance Enum (Proxy s) where
     enumFromThen _ _ = [Proxy]
     enumFromThenTo _ _ _ = [Proxy]
     enumFromTo _ _ = [Proxy]
+
+{- 
+Work around for the following GHC bug with deriving Ix instances with a phantom type:
+
+Data/Tagged.hs:1:0:
+    Expecting an ordinary type, but found a type of kind * -> *
+    In an expression type signature: Proxy
+    In the expression: ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
+    In the definition of `Data.Tagged.$tag2con_Proxy':
+        Data.Tagged.$tag2con_Proxy (ghc-prim:GHC.Types.I# a)
+                                     = ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
+
+-}
+
+instance Ix (Proxy s) where
+    range _ = [Proxy]
+    index _ _ = 0
+    unsafeIndex _ _ = 0
+    inRange _ _ = True
+    rangeSize _ = 1
+    unsafeRangeSize _ = 1
     
 instance Bounded (Proxy s) where
     minBound = Proxy
@@ -215,18 +224,34 @@ instance Default (Proxy s) where
     def = Proxy
     {-# INLINE def #-}
 
+-- | Some times you need to change the tag you have lying around.
+-- Idiomatic usage is to make a new combinator for the relationship 
+-- between the tags that you want to enforce, and define that 
+-- combinator using 'retag'.
+--
+-- > data Succ n
+-- > reproxySucc :: Proxy n -> Proxy (Succ n)
+-- > reproxySucc = reproxy
 reproxy :: Proxy s -> Proxy t
 reproxy _ = Proxy
 {-# INLINE reproxy #-}
 
+-- | Convert from a 'Tagged' representation to a representation 
+-- based on a 'Proxy'.
 proxy :: Tagged s a -> Proxy s -> a
 proxy (Tagged x) _ = x
 {-# INLINE proxy #-}
 
+-- | Convert from a representation based on a 'Proxy' to a 'Tagged' 
+-- representation.
 unproxy :: (Proxy s -> a) -> Tagged s a
 unproxy f = Tagged (f Proxy)
 {-# INLINE unproxy #-}
 
+-- | 'asProxyTypeOf' is a type-restricted version of 'const'. 
+-- It is usually used as an infix operator, and its typing forces its first 
+-- argument (which is usually overloaded) to have the same type as the tag 
+-- of the second.
 asProxyTypeOf :: a -> Proxy a -> a
 asProxyTypeOf = const
 {-# INLINE asProxyTypeOf #-}
