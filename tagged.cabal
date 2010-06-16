@@ -7,6 +7,7 @@ maintainer:	    Edward A. Kmett <ekmett@gmail.com>
 stability:	    experimental
 category:	    Data, Phantom Types
 synopsis:	    Provides newtype wrappers for phantom types to avoid unsafely passing dummy arguments
+homepage:       http://github.com/ekmett/tagged
 copyright:      2009 Edward A. Kmett
 description:    Provides newtype wrappers for phantom types to avoid unsafely passing dummy arguments
 build-type:     Simple
