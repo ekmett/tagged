@@ -1,22 +1,34 @@
-name:		    tagged
-version:	    0.1.1
-license:	    BSD3
+name:           tagged
+version:        0.2
+license:        BSD3
 license-file:   LICENSE
-author:		    Edward A. Kmett
-maintainer:	    Edward A. Kmett <ekmett@gmail.com>
-stability:	    experimental
-category:	    Data, Phantom Types
-synopsis:	    Provides newtype wrappers for phantom types to avoid unsafely passing dummy arguments
+author:         Edward A. Kmett
+maintainer:     Edward A. Kmett <ekmett@gmail.com>
+stability:      experimental
+category:       Data, Phantom Types
+synopsis:       Provides newtype wrappers for phantom types to avoid unsafely passing dummy arguments
 homepage:       http://github.com/ekmett/tagged
-copyright:      2009 Edward A. Kmett
+copyright:      2009-2011 Edward A. Kmett
 description:    Provides newtype wrappers for phantom types to avoid unsafely passing dummy arguments
 build-type:     Simple
-cabal-version:  >=1.2
+cabal-version:  >=1.6
+
+source-repository head
+  type: git
+  location: git://github.com/ekmett/tagged.git
+
+flag DeriveDataTypeable
+  default: True
+  manual: False
 
 library
+  if flag(DeriveDataTypeable)
+    cpp-options: -DLANGUAGE_DeriveDataTypeable
+    extensions: DeriveDataTypeable
   build-depends: 
     base >= 4 && < 5,
     data-default >= 0.2 && < 3
   exposed-modules:
     Data.Tagged
+    Data.Proxy
   ghc-options: -Wall
