@@ -162,3 +162,6 @@ unproxy f = Tagged (f Proxy)
 asProxyTypeOf :: a -> Proxy a -> a
 asProxyTypeOf = const
 {-# INLINE asProxyTypeOf #-}
+
+instance Semigroup (Proxy a) where
+  Proxy <> Proxy = Proxy

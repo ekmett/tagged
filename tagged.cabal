@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.2
+version:        0.2.1
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -27,6 +27,7 @@ library
     extensions: DeriveDataTypeable
   build-depends: 
     base >= 4 && < 5,
+    semigroups >= 0.4 && < 0.5,
     data-default >= 0.2 && < 3
   exposed-modules:
     Data.Tagged
