@@ -135,10 +135,10 @@ instance Default (Proxy s) where
     def = Proxy
     {-# INLINE def #-}
 
--- | Some times you need to change the tag you have lying around.
+-- | Some times you need to change the proxy you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship 
--- between the tags that you want to enforce, and define that 
--- combinator using 'retag'.
+-- between the proxies that you want to enforce, and define that 
+-- combinator using 'reproxy'.
 --
 -- > data Succ n
 -- > reproxySucc :: Proxy n -> Proxy (Succ n)
