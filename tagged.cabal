@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.2.2.1
+version:        0.2.2.2
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -28,7 +28,7 @@ library
   build-depends: 
     base >= 4 && < 5,
     data-default >= 0.2 && < 3,
-    semigroups >= 0.5 && < 0.6
+    semigroups >= 0.6 && < 0.7
   exposed-modules:
     Data.Tagged
     Data.Proxy
