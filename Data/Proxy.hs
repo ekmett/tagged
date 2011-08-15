@@ -25,7 +25,6 @@ module Data.Proxy
 import Control.Applicative (Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
-import Data.Monoid (Monoid(..))
 import Data.Default (Default(..))
 import Data.Data (Data,Typeable)
 import Data.Ix (Ix(..))
