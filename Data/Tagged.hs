@@ -37,7 +37,7 @@ import Data.Semigroup
 -- a @'Tagged' s b@ can't try to use the argument @s@ as a real value.
 --
 -- Moreover, you don't have to rely on the compiler to inline away the extra
--- argument, because the newtype is "free"
+-- argument, because the newtype is \"free\"
 
 newtype Tagged s b = Tagged { unTagged :: b } deriving 
   ( Eq, Ord, Ix, Enum, Bounded, Num, Real, Integral, Fractional, Floating, RealFrac, RealFloat
