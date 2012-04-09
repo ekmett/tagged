@@ -25,7 +25,6 @@ module Data.Proxy
 import Control.Applicative (Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
-import Data.Default (Default(..))
 import Data.Data (Data,Typeable)
 import Data.Ix (Ix(..))
 import Data.Tagged
@@ -129,10 +128,6 @@ instance Traversable Proxy where
     {-# INLINE mapM #-}
     sequence _ = return Proxy
     {-# INLINE sequence #-}
-
-instance Default (Proxy s) where
-    def = Proxy
-    {-# INLINE def #-}
 
 -- | Some times you need to change the proxy you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship 
