@@ -17,15 +17,11 @@ source-repository head
   type: git
   location: git://github.com/ekmett/tagged.git
 
-flag DeriveDataTypeable
-  default: True
-  manual: False
-
 library
-  if flag(DeriveDataTypeable)
+  if !impl(hugs)
     cpp-options: -DLANGUAGE_DeriveDataTypeable
     extensions: DeriveDataTypeable
-  build-depends: 
+  build-depends:
     base >= 2 && < 5,
     semigroups >= 0.8 && < 0.9
   exposed-modules:
