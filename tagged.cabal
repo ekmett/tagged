@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.3
+version:        0.4
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -21,9 +21,7 @@ library
   if !impl(hugs)
     cpp-options: -DLANGUAGE_DeriveDataTypeable
     extensions: DeriveDataTypeable
-  build-depends:
-    base >= 2 && < 5,
-    semigroups >= 0.8 && < 0.9
+  build-depends: base >= 2 && < 5
   exposed-modules:
     Data.Tagged
     Data.Proxy

@@ -26,10 +26,11 @@ import Control.Applicative ((<$>), Applicative(..))
 import Control.Monad (liftM)
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
+#ifdef LANGUAGE_DeriveDataTypeable
 import Data.Data (Data,Typeable)
+#endif
 import Data.Ix (Ix(..))
 import Text.Read
-import Data.Semigroup
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -50,9 +51,6 @@ instance Show b => Show (Tagged s b) where
     showsPrec n (Tagged b) = showParen (n > 10) $
         showString "Tagged " .
         showsPrec 11 b
-
-instance Semigroup a => Semigroup (Tagged s a) where
-    Tagged a <> Tagged b = Tagged (a <> b)
 
 instance Read b => Read (Tagged s b) where
     readPrec = parens $ prec 10 $ do
