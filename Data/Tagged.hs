@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE CPP #-}
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
@@ -22,7 +22,7 @@ module Data.Tagged
     , asTaggedTypeOf
     ) where
 
-import Control.Applicative ((<$>), Applicative(..))
+import Control.Applicative ((<$>), liftA2, Applicative(..))
 import Control.Monad (liftM)
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
@@ -41,7 +41,7 @@ import Text.Read
 -- argument, because the newtype is \"free\"
 
 newtype Tagged s b = Tagged { unTagged :: b } deriving 
-  ( Eq, Ord, Ix, Enum, Bounded, Num, Real, Integral, Fractional, Floating, RealFrac, RealFloat
+  ( Eq, Ord, Ix, Bounded
 #ifdef LANGUAGE_DeriveDataTypeable
   , Data, Typeable
 #endif
@@ -53,9 +53,8 @@ instance Show b => Show (Tagged s b) where
         showsPrec 11 b
 
 instance Read b => Read (Tagged s b) where
-    readPrec = parens $ prec 10 $ do
-        Ident "Tagged" <- lexP
-        Tagged <$> step readPrec
+    readsPrec d = readParen (d > 10) $ \r ->
+        [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- readsPrec 11 s]
 
 instance Functor (Tagged s) where 
     fmap f (Tagged x) = Tagged (f x)
@@ -98,6 +97,89 @@ instance Traversable (Tagged s) where
     {-# INLINE mapM #-}
     sequence (Tagged x) = liftM Tagged x
     {-# INLINE sequence #-}
+
+instance (Enum a) => Enum (Tagged s a) where
+    succ = fmap succ
+    pred = fmap pred
+    toEnum = Tagged . toEnum
+    fromEnum (Tagged x) = fromEnum x
+    enumFrom (Tagged x) = map Tagged (enumFrom x)
+    enumFromThen (Tagged x) (Tagged y) = map Tagged (enumFromThen x y)
+    enumFromTo (Tagged x) (Tagged y) = map Tagged (enumFromTo x y)
+    enumFromThenTo (Tagged x) (Tagged y) (Tagged z) =
+        map Tagged (enumFromThenTo x y z)
+
+instance (Num a) => Num (Tagged s a) where
+    (+) = liftA2 (+)
+    (-) = liftA2 (-)
+    (*) = liftA2 (*)
+    negate = fmap negate
+    abs = fmap abs
+    signum = fmap signum
+    fromInteger = Tagged . fromInteger
+
+instance (Real a) => Real (Tagged s a) where
+    toRational (Tagged x) = toRational x
+
+instance (Integral a) => Integral (Tagged s a) where
+    quot = liftA2 quot
+    rem = liftA2 rem
+    div = liftA2 div
+    mod = liftA2 mod
+    quotRem (Tagged x) (Tagged y) = (Tagged a, Tagged b) where
+        (a, b) = quotRem x y
+    divMod (Tagged x) (Tagged y) = (Tagged a, Tagged b) where
+        (a, b) = divMod x y
+    toInteger (Tagged x) = toInteger x
+
+instance (Fractional a) => Fractional (Tagged s a) where
+    (/) = liftA2 (/)
+    recip = fmap recip
+    fromRational = Tagged . fromRational
+
+instance (Floating a) => Floating (Tagged s a) where
+    pi = Tagged pi
+    exp = fmap exp
+    log = fmap log
+    sqrt = fmap sqrt
+    sin = fmap sin
+    cos = fmap cos
+    tan = fmap tan
+    asin = fmap asin
+    acos = fmap acos
+    atan = fmap atan
+    sinh = fmap sinh
+    cosh = fmap cosh
+    tanh = fmap tanh
+    asinh = fmap asinh
+    acosh = fmap acosh
+    atanh = fmap atanh
+    (**) = liftA2 (**)
+    logBase = liftA2 (**)
+
+instance (RealFrac a) => RealFrac (Tagged s a) where
+    properFraction (Tagged x) = (a, Tagged b) where
+        (a, b) = properFraction x
+    truncate (Tagged x) = truncate x
+    round (Tagged x) = round x
+    ceiling (Tagged x) = ceiling x
+    floor (Tagged x) = floor x
+
+instance (RealFloat a) => RealFloat (Tagged s a) where
+    floatRadix (Tagged x) = floatRadix x
+    floatDigits (Tagged x) = floatDigits x
+    floatRange (Tagged x) = floatRange x
+    decodeFloat (Tagged x) = decodeFloat x
+    encodeFloat m n = Tagged (encodeFloat m n)
+    exponent (Tagged x) = exponent x
+    significand = fmap significand
+    scaleFloat n = fmap (scaleFloat n)
+    isNaN (Tagged x) = isNaN x
+    isInfinite (Tagged x) = isInfinite x
+    isDenormalized (Tagged x) = isDenormalized x
+    isNegativeZero (Tagged x) = isNegativeZero x
+    isIEEE (Tagged x) = isIEEE x
+    atan2 = liftA2 atan2
 
 -- | Some times you need to change the tag you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship between the
