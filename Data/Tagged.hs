@@ -62,6 +62,10 @@ instance Read b => Read (Tagged s b) where
 instance Semigroup a => Semigroup (Tagged s a) where
     Tagged a <> Tagged b = Tagged (a <> b)
 
+instance Monoid a => Monoid (Tagged s a) where
+    mempty = Tagged mempty
+    mappend (Tagged a) (Tagged b) = Tagged (mappend a b)
+
 instance Functor (Tagged s) where 
     fmap f (Tagged x) = Tagged (f x)
     {-# INLINE fmap #-}
@@ -104,7 +108,7 @@ instance Traversable (Tagged s) where
     sequence (Tagged x) = liftM Tagged x
     {-# INLINE sequence #-}
 
-instance (Enum a) => Enum (Tagged s a) where
+instance Enum a => Enum (Tagged s a) where
     succ = fmap succ
     pred = fmap pred
     toEnum = Tagged . toEnum
@@ -115,7 +119,7 @@ instance (Enum a) => Enum (Tagged s a) where
     enumFromThenTo (Tagged x) (Tagged y) (Tagged z) =
         map Tagged (enumFromThenTo x y z)
 
-instance (Num a) => Num (Tagged s a) where
+instance Num a => Num (Tagged s a) where
     (+) = liftA2 (+)
     (-) = liftA2 (-)
     (*) = liftA2 (*)
@@ -124,10 +128,10 @@ instance (Num a) => Num (Tagged s a) where
     signum = fmap signum
     fromInteger = Tagged . fromInteger
 
-instance (Real a) => Real (Tagged s a) where
+instance Real a => Real (Tagged s a) where
     toRational (Tagged x) = toRational x
 
-instance (Integral a) => Integral (Tagged s a) where
+instance Integral a => Integral (Tagged s a) where
     quot = liftA2 quot
     rem = liftA2 rem
     div = liftA2 div
@@ -138,12 +142,12 @@ instance (Integral a) => Integral (Tagged s a) where
         (a, b) = divMod x y
     toInteger (Tagged x) = toInteger x
 
-instance (Fractional a) => Fractional (Tagged s a) where
+instance Fractional a => Fractional (Tagged s a) where
     (/) = liftA2 (/)
     recip = fmap recip
     fromRational = Tagged . fromRational
 
-instance (Floating a) => Floating (Tagged s a) where
+instance Floating a => Floating (Tagged s a) where
     pi = Tagged pi
     exp = fmap exp
     log = fmap log
@@ -163,7 +167,7 @@ instance (Floating a) => Floating (Tagged s a) where
     (**) = liftA2 (**)
     logBase = liftA2 (**)
 
-instance (RealFrac a) => RealFrac (Tagged s a) where
+instance RealFrac a => RealFrac (Tagged s a) where
     properFraction (Tagged x) = (a, Tagged b) where
         (a, b) = properFraction x
     truncate (Tagged x) = truncate x
@@ -171,7 +175,7 @@ instance (RealFrac a) => RealFrac (Tagged s a) where
     ceiling (Tagged x) = ceiling x
     floor (Tagged x) = floor x
 
-instance (RealFloat a) => RealFloat (Tagged s a) where
+instance RealFloat a => RealFloat (Tagged s a) where
     floatRadix (Tagged x) = floatRadix x
     floatDigits (Tagged x) = floatDigits x
     floatRange (Tagged x) = floatRange x

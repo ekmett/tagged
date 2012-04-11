@@ -59,6 +59,10 @@ instance Enum (Proxy s) where
 instance Semigroup (Proxy s) where
     _ <> _ = Proxy
 
+instance Monoid (Proxy s) where
+    mempty = Proxy
+    mappend _ _ = Proxy
+
 {- 
 Work around for the following GHC bug with deriving Ix instances with a phantom type:
 
