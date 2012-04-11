@@ -1,4 +1,7 @@
-{-# LANGUAGE CPP, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE CPP #-}
+#ifdef LANGUAGE_DeriveDataTypeable
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Proxy
@@ -7,7 +10,7 @@
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
 -- Stability   : experimental
--- Portability : generalized newtype deriving
+-- Portability : portable
 --
 -------------------------------------------------------------------------------
 
@@ -38,7 +41,7 @@ import GHC.Arr (unsafeIndex, unsafeRangeSize)
 data Proxy p = Proxy deriving 
   ( Eq, Ord, Show, Read
 #ifdef LANGUAGE_DeriveDataTypeable
-  , Data,Typeable
+  , Data, Typeable
 #endif
   )
 

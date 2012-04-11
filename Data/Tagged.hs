@@ -1,4 +1,7 @@
 {-# LANGUAGE CPP #-}
+#ifdef LANGUAGE_DeriveDataTypeable
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
@@ -7,7 +10,7 @@
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
 -- Stability   : experimental
--- Portability : generalized newtype deriving
+-- Portability : portable
 --
 -------------------------------------------------------------------------------
 
@@ -209,4 +212,3 @@ asTaggedTypeOf = const
 untagSelf :: Tagged a a -> a
 untagSelf (Tagged x) = x
 {-# INLINE untagSelf #-}
-
