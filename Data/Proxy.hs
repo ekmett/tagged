@@ -33,7 +33,7 @@ import Data.Data (Data,Typeable)
 #endif
 import Data.Ix (Ix(..))
 import Data.Tagged
-import Data.Monoid
+import Data.Semigroup
 #ifdef __GLASGOW_HASKELL__
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
 #endif
@@ -55,6 +55,9 @@ instance Enum (Proxy s) where
     enumFromThen _ _ = [Proxy]
     enumFromThenTo _ _ _ = [Proxy]
     enumFromTo _ _ = [Proxy]
+
+instance Semigroup (Proxy s) where
+    _ <> _ = Proxy
 
 {- 
 Work around for the following GHC bug with deriving Ix instances with a phantom type:
