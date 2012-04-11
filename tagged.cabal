@@ -24,8 +24,7 @@ library
     cpp-options: -DLANGUAGE_DeriveDataTypeable
     other-extensions: DeriveDataTypeable
   build-depends:
-    base >= 2 && < 5,
-    semigroups >= 0.8 && < 0.9
+    base >= 2 && < 5
   exposed-modules:
     Data.Tagged
     Data.Proxy

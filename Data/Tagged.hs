@@ -33,7 +33,7 @@ import Data.Foldable (Foldable(..))
 import Data.Data (Data,Typeable)
 #endif
 import Data.Ix (Ix(..))
-import Data.Semigroup
+import Data.Monoid
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -58,9 +58,6 @@ instance Show b => Show (Tagged s b) where
 instance Read b => Read (Tagged s b) where
     readsPrec d = readParen (d > 10) $ \r ->
         [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- readsPrec 11 s]
-
-instance Semigroup a => Semigroup (Tagged s a) where
-    Tagged a <> Tagged b = Tagged (a <> b)
 
 instance Monoid a => Monoid (Tagged s a) where
     mempty = Tagged mempty
