@@ -2,13 +2,13 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ > 706
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
 {-# LANGUAGE PolyKinds #-}
 #endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
--- Copyright  : 2009-2011 Edward Kmett
+-- Copyright  : 2009-2012 Edward Kmett
 -- License    : BSD3
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
@@ -32,8 +32,8 @@ import Control.Applicative ((<$>), liftA2, Applicative(..))
 import Control.Monad (liftM)
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
-#ifdef LANGUAGE_DeriveDataTypeable
-import Data.Data (Data,Typeable)
+#ifdef __GLASGOW_HASKELL__
+import Data.Data
 #endif
 import Data.Ix (Ix(..))
 import Data.Monoid
@@ -45,13 +45,39 @@ import Data.Monoid
 --
 -- Moreover, you don't have to rely on the compiler to inline away the extra
 -- argument, because the newtype is \"free\"
-
 newtype Tagged s b = Tagged { unTagged :: b } deriving
   ( Eq, Ord, Ix, Bounded
-#ifdef LANGUAGE_DeriveDataTypeable
-  , Data, Typeable
-#endif
   )
+
+#ifdef __GLASGOW_HASKELL__
+instance Typeable2 Tagged where
+  typeOf2 _ = mkTyConApp taggedTyCon []
+
+taggedTyCon :: TyCon
+#if __GLASGOW_HASKELL__ < 704
+taggedTyCon = mkTyCon "Data.Tagged.Tagged"
+#else
+taggedTyCon = mkTyCon3 "tagged" "Data.Tagged" "Tagged"
+#endif
+
+instance (Data s, Data b) => Data (Tagged s b) where
+  gfoldl f z (Tagged b) = z Tagged `f` b
+  toConstr _ = taggedConstr
+  gunfold k z c = case constrIndex c of
+    1 -> k (z Tagged)
+    _ -> error "gunfold"
+  dataTypeOf _ = taggedDataType
+  dataCast1 f = gcast1 f
+  dataCast2 f = gcast2 f
+
+taggedConstr :: Constr
+taggedConstr = mkConstr taggedDataType "Tagged" [] Prefix
+{-# INLINE taggedConstr #-}
+
+taggedDataType :: DataType
+taggedDataType = mkDataType "Data.Tagged.Tagged" [taggedConstr]
+{-# INLINE taggedDataType #-}
+#endif
 
 instance Show b => Show (Tagged s b) where
     showsPrec n (Tagged b) = showParen (n > 10) $
@@ -195,9 +221,11 @@ instance RealFloat a => RealFloat (Tagged s a) where
 -- Idiomatic usage is to make a new combinator for the relationship between the
 -- tags that you want to enforce, and define that combinator using 'retag'.
 --
--- > data Succ n
--- > retagSucc :: Tagged n a -> Tagged (Succ n) a
--- > retagSucc = retag
+-- @
+-- data Succ n
+-- retagSucc :: 'Tagged' n a -> 'Tagged' (Succ n) a
+-- retagSucc = 'retag'
+-- @
 retag :: Tagged s b -> Tagged t b
 retag = Tagged . unTagged
 {-# INLINE retag #-}

@@ -2,13 +2,13 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ > 706
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
 {-# LANGUAGE PolyKinds #-}
 #endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Proxy
--- Copyright  : 2009-2011 Edward Kmett
+-- Copyright  : 2009-2012 Edward Kmett
 -- License    : BSD3
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
@@ -16,7 +16,6 @@
 -- Portability : portable
 --
 -------------------------------------------------------------------------------
-
 module Data.Proxy
     (
     -- * Tagged values
@@ -39,18 +38,18 @@ import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
 #endif
 
-data Proxy p = Proxy
+data Proxy s = Proxy
 
-instance Eq (Proxy p) where
-  _ == _ = True -- deriving (Eq, Ord, Show, Read)
+instance Eq (Proxy s) where
+  _ == _ = True
 
-instance Ord (Proxy p) where
+instance Ord (Proxy s) where
   compare _ _ = EQ
 
-instance Show (Proxy p) where
+instance Show (Proxy s) where
   showsPrec _ _ = showString "Proxy"
 
-instance Read (Proxy p) where
+instance Read (Proxy s) where
   readsPrec d = readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
 
 #ifdef __GLASGOW_HASKELL__
@@ -66,7 +65,7 @@ proxyTyCon = mkTyCon3 "tagged" "Data.Proxy" "Proxy"
 #endif
 {-# NOINLINE proxyTyCon #-}
 
-instance Data a => Data (Proxy a) where
+instance Data s => Data (Proxy s) where
   gfoldl _ z _ = z Proxy
   toConstr _ = proxyConstr
   gunfold _ z c = case constrIndex c of
