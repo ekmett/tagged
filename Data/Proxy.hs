@@ -31,22 +31,58 @@ module Data.Proxy
 import Control.Applicative (Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
-#ifdef LANGUAGE_DeriveDataTypeable
-import Data.Data (Data,Typeable)
-#endif
 import Data.Ix (Ix(..))
 import Data.Tagged
 import Data.Monoid
 #ifdef __GLASGOW_HASKELL__
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
+import Data.Data
 #endif
 
-data Proxy p = Proxy deriving
-  ( Eq, Ord, Show, Read
-#ifdef LANGUAGE_DeriveDataTypeable
-  , Data, Typeable
+data Proxy p = Proxy
+
+instance Eq (Proxy p) where
+  _ == _ = True -- deriving (Eq, Ord, Show, Read)
+
+instance Ord (Proxy p) where
+  compare _ _ = EQ
+
+instance Show (Proxy p) where
+  showsPrec _ _ = showString "Proxy"
+
+instance Read (Proxy p) where
+  readsPrec d = readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
+
+#ifdef __GLASGOW_HASKELL__
+
+instance Typeable1 Proxy where
+  typeOf1 _ = mkTyConApp proxyTyCon []
+
+proxyTyCon :: TyCon
+#if __GLASGOW_HASKELL__ < 704
+proxyTyCon = mkTyCon "Data.Proxy.Proxy"
+#else
+proxyTyCon = mkTyCon3 "tagged" "Data.Proxy" "Proxy"
 #endif
-  )
+{-# NOINLINE proxyTyCon #-}
+
+instance Data a => Data (Proxy a) where
+  gfoldl _ z _ = z Proxy
+  toConstr _ = proxyConstr
+  gunfold _ z c = case constrIndex c of
+    1 -> z Proxy
+    _ -> error "gunfold"
+  dataTypeOf _ = proxyDataType
+  dataCast1 f = gcast1 f
+
+proxyConstr :: Constr
+proxyConstr = mkConstr proxyDataType "Proxy" [] Prefix
+{-# NOINLINE proxyConstr #-}
+
+proxyDataType :: DataType
+proxyDataType = mkDataType "Data.Proxy.Proxy" [proxyConstr]
+{-# NOINLINE proxyDataType #-}
+#endif
 
 instance Enum (Proxy s) where
     succ _ = error "Proxy.succ"
@@ -58,19 +94,6 @@ instance Enum (Proxy s) where
     enumFromThen _ _ = [Proxy]
     enumFromThenTo _ _ _ = [Proxy]
     enumFromTo _ _ = [Proxy]
-
-{-
-Work around for the following GHC bug with deriving Ix instances with a phantom type:
-
-Data/Tagged.hs:1:0:
-    Expecting an ordinary type, but found a type of kind * -> *
-    In an expression type signature: Proxy
-    In the expression: ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
-    In the definition of `Data.Tagged.$tag2con_Proxy':
-        Data.Tagged.$tag2con_Proxy (ghc-prim:GHC.Types.I# a)
-                                     = ghc-prim:GHC.Prim.tagToEnum# a :: Proxy
-
--}
 
 instance Ix (Proxy s) where
     range _ = [Proxy]
