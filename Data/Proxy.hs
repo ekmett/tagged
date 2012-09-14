@@ -2,6 +2,9 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ > 706
+{-# LANGUAGE PolyKinds #-}
+#endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Proxy
@@ -15,7 +18,7 @@
 -------------------------------------------------------------------------------
 
 module Data.Proxy
-    ( 
+    (
     -- * Tagged values
       Proxy(..)
     , reproxy
@@ -38,7 +41,7 @@ import Data.Monoid
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
 #endif
 
-data Proxy p = Proxy deriving 
+data Proxy p = Proxy deriving
   ( Eq, Ord, Show, Read
 #ifdef LANGUAGE_DeriveDataTypeable
   , Data, Typeable
@@ -56,7 +59,7 @@ instance Enum (Proxy s) where
     enumFromThenTo _ _ _ = [Proxy]
     enumFromTo _ _ = [Proxy]
 
-{- 
+{-
 Work around for the following GHC bug with deriving Ix instances with a phantom type:
 
 Data/Tagged.hs:1:0:
@@ -78,11 +81,11 @@ instance Ix (Proxy s) where
     unsafeIndex _ _ = 0
     unsafeRangeSize _ = 1
 #endif
-    
+
 instance Bounded (Proxy s) where
     minBound = Proxy
     maxBound = Proxy
-    
+
 instance Functor Proxy where
     fmap _ _ = Proxy
     {-# INLINE fmap #-}
@@ -132,8 +135,8 @@ instance Traversable Proxy where
     {-# INLINE sequence #-}
 
 -- | Some times you need to change the proxy you have lying around.
--- Idiomatic usage is to make a new combinator for the relationship 
--- between the proxies that you want to enforce, and define that 
+-- Idiomatic usage is to make a new combinator for the relationship
+-- between the proxies that you want to enforce, and define that
 -- combinator using 'reproxy'.
 --
 -- > data Succ n
@@ -143,21 +146,21 @@ reproxy :: Proxy s -> Proxy t
 reproxy _ = Proxy
 {-# INLINE reproxy #-}
 
--- | Convert from a 'Tagged' representation to a representation 
+-- | Convert from a 'Tagged' representation to a representation
 -- based on a 'Proxy'.
 proxy :: Tagged s a -> Proxy s -> a
 proxy (Tagged x) _ = x
 {-# INLINE proxy #-}
 
--- | Convert from a representation based on a 'Proxy' to a 'Tagged' 
+-- | Convert from a representation based on a 'Proxy' to a 'Tagged'
 -- representation.
 unproxy :: (Proxy s -> a) -> Tagged s a
 unproxy f = Tagged (f Proxy)
 {-# INLINE unproxy #-}
 
--- | 'asProxyTypeOf' is a type-restricted version of 'const'. 
--- It is usually used as an infix operator, and its typing forces its first 
--- argument (which is usually overloaded) to have the same type as the tag 
+-- | 'asProxyTypeOf' is a type-restricted version of 'const'.
+-- It is usually used as an infix operator, and its typing forces its first
+-- argument (which is usually overloaded) to have the same type as the tag
 -- of the second.
 asProxyTypeOf :: a -> Proxy a -> a
 asProxyTypeOf = const

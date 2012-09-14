@@ -2,6 +2,9 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ > 706
+{-# LANGUAGE PolyKinds #-}
+#endif
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
@@ -15,7 +18,7 @@
 -------------------------------------------------------------------------------
 
 module Data.Tagged
-    ( 
+    (
     -- * Tagged values
       Tagged(..)
     , retag
@@ -37,13 +40,13 @@ import Data.Monoid
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
--- passing in an undefined value with the type, because unlike an @(s -> b)@, 
+-- passing in an undefined value with the type, because unlike an @(s -> b)@,
 -- a @'Tagged' s b@ can't try to use the argument @s@ as a real value.
 --
 -- Moreover, you don't have to rely on the compiler to inline away the extra
 -- argument, because the newtype is \"free\"
 
-newtype Tagged s b = Tagged { unTagged :: b } deriving 
+newtype Tagged s b = Tagged { unTagged :: b } deriving
   ( Eq, Ord, Ix, Bounded
 #ifdef LANGUAGE_DeriveDataTypeable
   , Data, Typeable
@@ -63,7 +66,7 @@ instance Monoid a => Monoid (Tagged s a) where
     mempty = Tagged mempty
     mappend (Tagged a) (Tagged b) = Tagged (mappend a b)
 
-instance Functor (Tagged s) where 
+instance Functor (Tagged s) where
     fmap f (Tagged x) = Tagged (f x)
     {-# INLINE fmap #-}
 
@@ -76,7 +79,7 @@ instance Applicative (Tagged s) where
 instance Monad (Tagged s) where
     return = Tagged
     {-# INLINE return #-}
-    Tagged m >>= k = k m 
+    Tagged m >>= k = k m
     {-# INLINE (>>=) #-}
     _ >> n = n
     {-# INLINE (>>) #-}
@@ -90,7 +93,7 @@ instance Foldable (Tagged s) where
     {-# INLINE foldr #-}
     foldl f z (Tagged x) = f z x
     {-# INLINE foldl #-}
-    foldl1 _ (Tagged x) = x 
+    foldl1 _ (Tagged x) = x
     {-# INLINE foldl1 #-}
     foldr1 _ (Tagged x) = x
     {-# INLINE foldr1 #-}
@@ -196,7 +199,7 @@ instance RealFloat a => RealFloat (Tagged s a) where
 -- > retagSucc :: Tagged n a -> Tagged (Succ n) a
 -- > retagSucc = retag
 retag :: Tagged s b -> Tagged t b
-retag = Tagged . unTagged 
+retag = Tagged . unTagged
 {-# INLINE retag #-}
 
 -- | Alias for 'unTagged'
