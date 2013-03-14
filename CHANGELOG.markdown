@@ -1,3 +1,7 @@
+0.4.5
+-----
+* Added `witness`
+
 0.4.4
 -----
 * Actually working polymorphic kind support
