@@ -26,6 +26,7 @@ module Data.Tagged
     , tagSelf
     , untagSelf
     , asTaggedTypeOf
+    , witness
     ) where
 
 import Control.Applicative ((<$>), liftA2, Applicative(..))
@@ -243,6 +244,10 @@ tagSelf = Tagged
 asTaggedTypeOf :: s -> Tagged s b -> s
 asTaggedTypeOf = const
 {-# INLINE asTaggedTypeOf #-}
+
+witness :: Tagged a b -> a -> b
+witness (Tagged b) _ = b
+{-# INLINE witness #-}
 
 -- | 'untagSelf' is a type-restricted version of 'untag'.
 untagSelf :: Tagged a a -> a
