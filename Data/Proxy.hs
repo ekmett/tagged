@@ -38,6 +38,10 @@ import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
 #endif
 
+#if __GLASGOW_HASKELL__ >= 707
+import Data.Data (Proxy)
+
+#else
 data Proxy s = Proxy
 
 instance Eq (Proxy s) where
@@ -53,6 +57,7 @@ instance Read (Proxy s) where
   readsPrec d = readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
 
 #ifdef __GLASGOW_HASKELL__
+#if __GLASGOW_HASKELL__ < 707
 
 instance Typeable1 Proxy where
   typeOf1 _ = mkTyConApp proxyTyCon []
@@ -64,6 +69,7 @@ proxyTyCon = mkTyCon "Data.Proxy.Proxy"
 proxyTyCon = mkTyCon3 "tagged" "Data.Proxy" "Proxy"
 #endif
 {-# NOINLINE proxyTyCon #-}
+#endif
 
 instance Data s => Data (Proxy s) where
   gfoldl _ z _ = z Proxy
@@ -156,6 +162,8 @@ instance Traversable Proxy where
     sequence _ = return Proxy
     {-# INLINE sequence #-}
 
+#endif
+
 -- | Some times you need to change the proxy you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship
 -- between the proxies that you want to enforce, and define that
@@ -187,3 +195,4 @@ unproxy f = Tagged (f Proxy)
 asProxyTypeOf :: a -> Proxy a -> a
 asProxyTypeOf = const
 {-# INLINE asProxyTypeOf #-}
+
