@@ -48,9 +48,13 @@ import Data.Monoid
 -- argument, because the newtype is \"free\"
 newtype Tagged s b = Tagged { unTagged :: b } deriving
   ( Eq, Ord, Ix, Bounded
+#if __GLASGOW_HASKELL__ >= 707
+  , Typeable
+#endif
   )
 
 #ifdef __GLASGOW_HASKELL__
+#if __GLASGOW_HASKELL__ < 707
 instance Typeable2 Tagged where
   typeOf2 _ = mkTyConApp taggedTyCon []
 
@@ -59,6 +63,8 @@ taggedTyCon :: TyCon
 taggedTyCon = mkTyCon "Data.Tagged.Tagged"
 #else
 taggedTyCon = mkTyCon3 "tagged" "Data.Tagged" "Tagged"
+#endif
+
 #endif
 
 instance (Data s, Data b) => Data (Tagged s b) where
