@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.4.5
+version:        0.5
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -9,7 +9,7 @@ category:       Data, Phantom Types
 synopsis:       Haskell 98 phantom types to avoid unsafely passing dummy arguments
 homepage:       http://github.com/ekmett/tagged
 bug-reports:    http://github.com/ekmett/tagged/issues
-copyright:      2009-2011 Edward A. Kmett
+copyright:      2009-2013 Edward A. Kmett
 description:    Haskell 98 phantom types to avoid unsafely passing dummy arguments
 build-type:     Simple
 cabal-version:  >= 1.10
