@@ -5,6 +5,9 @@
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
 {-# LANGUAGE PolyKinds #-}
 #endif
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
+{-# LANGUAGE StandaloneDeriving #-}
+#endif
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 ----------------------------------------------------------------------------
 -- |
@@ -41,6 +44,7 @@ import Data.Data
 
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
 import Data.Data (Proxy)
+deriving instance Typeable Proxy
 #else
 data Proxy s = Proxy
 #endif
