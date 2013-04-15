@@ -37,13 +37,13 @@ import Data.Monoid
 #ifdef __GLASGOW_HASKELL__
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
-#endif // __GLASGOW_HASKELL__
+#endif
 
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
 import Data.Data (Proxy)
 #else
 data Proxy s = Proxy
-#endif // defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
+#endif
 
 instance Eq (Proxy s) where
   _ == _ = True
@@ -67,9 +67,9 @@ proxyTyCon :: TyCon
 proxyTyCon = mkTyCon "Data.Proxy.Proxy"
 #else
 proxyTyCon = mkTyCon3 "tagged" "Data.Proxy" "Proxy"
-#endif // __GLASGOW_HASKELL__ < 704
+#endif
 {-# NOINLINE proxyTyCon #-}
-#endif // __GLASGOW_HASKELL__ < 707
+#endif
 
 instance Data s => Data (Proxy s) where
   gfoldl _ z _ = z Proxy
@@ -87,7 +87,7 @@ proxyConstr = mkConstr proxyDataType "Proxy" [] Prefix
 proxyDataType :: DataType
 proxyDataType = mkDataType "Data.Proxy.Proxy" [proxyConstr]
 {-# NOINLINE proxyDataType #-}
-#endif // __GLASGOW_HASKELL__
+#endif
 
 instance Enum (Proxy s) where
     succ _ = error "Proxy.succ"
