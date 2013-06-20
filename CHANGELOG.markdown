@@ -1,3 +1,7 @@
+0.6.1
+-----
+* Needlessly claim that this entirely pure package is `Trustworthy`!
+
 0.6
 ---
 * On GHC 7.7, we now still export the instances we used to for `Data.Proxy.Proxy` as orphans if need be.

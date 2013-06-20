@@ -8,6 +8,9 @@
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
 {-# LANGUAGE StandaloneDeriving #-}
 #endif
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 ----------------------------------------------------------------------------
 -- |
