@@ -174,15 +174,15 @@ instance Traversable Proxy where
 -- combinator using 'reproxy'.
 --
 -- > data Succ n
--- > reproxySucc :: Proxy n -> Proxy (Succ n)
+-- > reproxySucc :: proxy n -> Proxy (Succ n)
 -- > reproxySucc = reproxy
-reproxy :: Proxy s -> Proxy t
+reproxy :: proxy s -> Proxy t
 reproxy _ = Proxy
 {-# INLINE reproxy #-}
 
 -- | Convert from a 'Tagged' representation to a representation
 -- based on a 'Proxy'.
-proxy :: Tagged s a -> Proxy s -> a
+proxy :: Tagged s a -> proxy s -> a
 proxy (Tagged x) _ = x
 {-# INLINE proxy #-}
 
@@ -196,6 +196,6 @@ unproxy f = Tagged (f Proxy)
 -- It is usually used as an infix operator, and its typing forces its first
 -- argument (which is usually overloaded) to have the same type as the tag
 -- of the second.
-asProxyTypeOf :: a -> Proxy a -> a
+asProxyTypeOf :: a -> proxy a -> a
 asProxyTypeOf = const
 {-# INLINE asProxyTypeOf #-}

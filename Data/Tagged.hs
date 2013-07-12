@@ -250,7 +250,7 @@ tagSelf = Tagged
 {-# INLINE tagSelf #-}
 
 -- | 'asTaggedTypeOf' is a type-restricted version of 'const'. It is usually used as an infix operator, and its typing forces its first argument (which is usually overloaded) to have the same type as the tag of the second.
-asTaggedTypeOf :: s -> Tagged s b -> s
+asTaggedTypeOf :: s -> tagged s b -> s
 asTaggedTypeOf = const
 {-# INLINE asTaggedTypeOf #-}
 
