@@ -1,3 +1,7 @@
+0.6.2
+-----
+* Allowed polymorphic arguments where possible.
+
 0.6.1
 -----
 * Needlessly claim that this entirely pure package is `Trustworthy`!
