@@ -25,20 +25,16 @@
 -------------------------------------------------------------------------------
 module Data.Proxy
     (
-    -- * Tagged values
+    -- * Proxy values
       Proxy(..)
     , reproxy
     , asProxyTypeOf
-    -- * Conversion
-    , proxy
-    , unproxy
     ) where
 
 import Control.Applicative (Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
 import Data.Ix (Ix(..))
-import Data.Tagged
 import Data.Monoid
 #ifdef __GLASGOW_HASKELL__
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
@@ -179,18 +175,6 @@ instance Traversable Proxy where
 reproxy :: proxy s -> Proxy t
 reproxy _ = Proxy
 {-# INLINE reproxy #-}
-
--- | Convert from a 'Tagged' representation to a representation
--- based on a 'Proxy'.
-proxy :: Tagged s a -> proxy s -> a
-proxy (Tagged x) _ = x
-{-# INLINE proxy #-}
-
--- | Convert from a representation based on a 'Proxy' to a 'Tagged'
--- representation.
-unproxy :: (Proxy s -> a) -> Tagged s a
-unproxy f = Tagged (f Proxy)
-{-# INLINE unproxy #-}
 
 -- | 'asProxyTypeOf' is a type-restricted version of 'const'.
 -- It is usually used as an infix operator, and its typing forces its first
