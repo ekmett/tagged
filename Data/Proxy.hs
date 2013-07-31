@@ -41,11 +41,8 @@ import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
 #endif
 
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
-deriving instance Typeable Proxy
-#else
+#if !defined(__GLASGOW_HASKELL__) || __GLASGOW_HASKELL__ < 707
 data Proxy s = Proxy
-#endif
 
 instance Eq (Proxy s) where
   _ == _ = True
@@ -58,6 +55,7 @@ instance Show (Proxy s) where
 
 instance Read (Proxy s) where
   readsPrec d = readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
+#endif
 
 #ifdef __GLASGOW_HASKELL__
 #if __GLASGOW_HASKELL__ < 707
@@ -71,7 +69,6 @@ proxyTyCon = mkTyCon "Data.Proxy.Proxy"
 proxyTyCon = mkTyCon3 "tagged" "Data.Proxy" "Proxy"
 #endif
 {-# NOINLINE proxyTyCon #-}
-#endif
 
 instance Data s => Data (Proxy s) where
   gfoldl _ z _ = z Proxy
@@ -81,6 +78,7 @@ instance Data s => Data (Proxy s) where
     _ -> error "gunfold"
   dataTypeOf _ = proxyDataType
   dataCast1 f = gcast1 f
+#endif
 
 proxyConstr :: Constr
 proxyConstr = mkConstr proxyDataType "Proxy" [] Prefix
@@ -91,6 +89,7 @@ proxyDataType = mkDataType "Data.Proxy.Proxy" [proxyConstr]
 {-# NOINLINE proxyDataType #-}
 #endif
 
+#if !defined(__GLASGOW_HASKELL__) || __GLASGOW_HASKELL__ < 707
 instance Enum (Proxy s) where
     succ _ = error "Proxy.succ"
     pred _ = error "Proxy.pred"
@@ -163,6 +162,7 @@ instance Traversable Proxy where
     {-# INLINE mapM #-}
     sequence _ = return Proxy
     {-# INLINE sequence #-}
+#endif
 
 -- | Some times you need to change the proxy you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship
