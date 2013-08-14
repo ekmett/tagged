@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.6.2
+version:        0.6.3
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -22,12 +22,16 @@ source-repository head
 library
   default-language: Haskell98
   other-extensions: CPP
+  build-depends:
+    base >= 2 && < 5
+
+  exposed-modules: Data.Tagged
+
   if !impl(hugs)
     cpp-options: -DLANGUAGE_DeriveDataTypeable
     other-extensions: DeriveDataTypeable
-  build-depends:
-    base >= 2 && < 5
-  exposed-modules:
-    Data.Tagged
-    Data.Proxy
+
+  if !impl(ghc>=7.7)
+    exposed-modules: Data.Proxy
+
   ghc-options: -Wall
