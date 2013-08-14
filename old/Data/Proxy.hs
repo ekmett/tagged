@@ -15,7 +15,7 @@
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Proxy
--- Copyright  : 2009-2012 Edward Kmett
+-- Copyright  : 2009-2013 Edward Kmett
 -- License    : BSD3
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>

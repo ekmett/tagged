@@ -1,3 +1,9 @@
+0.7
+---
+* `Data.Proxy` has moved into base as of GHC 7.7 for use in the new `Data.Typeable`. We no longer export
+  it for GHC >= 7.7. The most notable change in the module from the migration into base is the loss of
+  the `reproxy` function.
+
 0.6.2
 -----
 * Allowed polymorphic arguments where possible.
