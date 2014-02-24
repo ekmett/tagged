@@ -33,6 +33,7 @@ module Data.Tagged
     -- * Conversion
     , proxy
     , unproxy
+    , tagWith
     ) where
 
 import Control.Applicative ((<$>), liftA2, Applicative(..))
@@ -278,3 +279,8 @@ proxy (Tagged x) _ = x
 unproxy :: (Proxy s -> a) -> Tagged s a
 unproxy f = Tagged (f Proxy)
 {-# INLINE unproxy #-}
+
+-- | Another way to convert a proxy to a tag.
+tagWith :: proxy s -> a -> Tagged s a
+tagWith _ = Tagged
+{-# INLINE tagWith #-}
