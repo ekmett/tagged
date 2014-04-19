@@ -45,7 +45,9 @@ import Data.Data
 #endif
 import Data.Ix (Ix(..))
 import Data.Monoid
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ < 707
 import Data.Proxy
+#endif
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of

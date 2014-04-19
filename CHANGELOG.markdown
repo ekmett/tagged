@@ -1,3 +1,7 @@
+0.7.2
+-----
+* Fixed warning on GHC 7.8
+
 0.7.1
 -----
 * Added `tagWith`.
