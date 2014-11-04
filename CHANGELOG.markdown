@@ -1,3 +1,7 @@
+0.7.3
+---
+* Support `Data.Bifunctor` in `base` for GHC 7.9+.
+
 0.7.2
 -----
 * Fixed warning on GHC 7.8
