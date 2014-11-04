@@ -38,6 +38,9 @@ module Data.Tagged
 
 import Control.Applicative ((<$>), liftA2, Applicative(..))
 import Control.Monad (liftM)
+#if __GLASGOW_HASKELL__ >= 709
+import Data.Bifunctor
+#endif
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
 #ifdef __GLASGOW_HASKELL__
@@ -112,6 +115,13 @@ instance Monoid a => Monoid (Tagged s a) where
 instance Functor (Tagged s) where
     fmap f (Tagged x) = Tagged (f x)
     {-# INLINE fmap #-}
+
+#if __GLASGOW_HASKELL__ >= 709
+-- this instance is provided by the bifunctors package for GHC<7.9
+instance Bifunctor Tagged where
+    bimap _ g (Tagged b) = Tagged (g b)
+    {-# INLINE bimap #-}
+#endif
 
 instance Applicative (Tagged s) where
     pure = Tagged
