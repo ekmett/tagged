@@ -34,3 +34,7 @@ library
   if !impl(ghc>=7.7)
     hs-source-dirs: old
     exposed-modules: Data.Proxy
+
+  if impl(ghc)
+    exposed-modules: Data.Proxy.TH
+    build-depends: template-haskell >= 2.5 && < 2.11

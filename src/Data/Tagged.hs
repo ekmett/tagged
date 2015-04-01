@@ -34,6 +34,8 @@ module Data.Tagged
     , proxy
     , unproxy
     , tagWith
+    -- * Proxy methods GHC dropped
+    , reproxy
     ) where
 
 import Control.Applicative ((<$>), liftA2, Applicative(..))
@@ -296,3 +298,6 @@ unproxy f = Tagged (f Proxy)
 tagWith :: proxy s -> a -> Tagged s a
 tagWith _ = Tagged
 {-# INLINE tagWith #-}
+
+reproxy :: proxy a -> Proxy b
+reproxy _ = Proxy
