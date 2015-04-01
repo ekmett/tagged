@@ -12,6 +12,7 @@ import Data.Functor
 #endif
 #if __GLASGOW_HASKELL__ < 707
 import Data.Version (showVersion)
+import Paths_tagged
 #endif
 import Language.Haskell.TH
 import Language.Haskell.TH.Quote
