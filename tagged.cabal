@@ -31,9 +31,10 @@ library
     cpp-options: -DLANGUAGE_DeriveDataTypeable
     other-extensions: DeriveDataTypeable
 
-  if !impl(ghc>=7.7)
+  if impl(ghc<7.7)
     hs-source-dirs: old
     exposed-modules: Data.Proxy
+    other-modules: Paths_tagged
 
   if impl(ghc)
     exposed-modules: Data.Proxy.TH
