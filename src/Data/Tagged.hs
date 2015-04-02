@@ -11,7 +11,7 @@
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
--- Copyright  : 2009-2013 Edward Kmett
+-- Copyright  : 2009-2015 Edward Kmett
 -- License    : BSD3
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
@@ -299,5 +299,15 @@ tagWith :: proxy s -> a -> Tagged s a
 tagWith _ = Tagged
 {-# INLINE tagWith #-}
 
+-- | Some times you need to change the proxy you have lying around.
+-- Idiomatic usage is to make a new combinator for the relationship
+-- between the proxies that you want to enforce, and define that
+-- combinator using 'reproxy'.
+--
+-- @
+-- data Succ n
+-- reproxySucc :: proxy n -> 'Proxy' (Succ n)
+-- reproxySucc = 'reproxy'
+-- @
 reproxy :: proxy a -> Proxy b
 reproxy _ = Proxy

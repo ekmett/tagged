@@ -1,3 +1,8 @@
+0.8
+---
+* Added `Data.Proxy.TH`, based on the code from `Frames` by Anthony Cowley.
+* Removed `reproxy` from `Data.Proxy`. This is a bad API decision, but it isn't present in GHC's `Data.Proxy`, and this makes the API more stable.
+
 0.7.3
 ---
 * Support `Data.Bifunctor` in `base` for GHC 7.9+.

@@ -27,7 +27,6 @@ module Data.Proxy
     (
     -- * Proxy values
       Proxy(..)
-    , reproxy
     , asProxyTypeOf
     ) where
 
@@ -163,18 +162,6 @@ instance Traversable Proxy where
     {-# INLINE mapM #-}
     sequence _ = return Proxy
     {-# INLINE sequence #-}
-
--- | Some times you need to change the proxy you have lying around.
--- Idiomatic usage is to make a new combinator for the relationship
--- between the proxies that you want to enforce, and define that
--- combinator using 'reproxy'.
---
--- > data Succ n
--- > reproxySucc :: proxy n -> Proxy (Succ n)
--- > reproxySucc = reproxy
-reproxy :: proxy s -> Proxy t
-reproxy _ = Proxy
-{-# INLINE reproxy #-}
 
 -- | 'asProxyTypeOf' is a type-restricted version of 'const'.
 -- It is usually used as an infix operator, and its typing forces its first
