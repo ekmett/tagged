@@ -1,7 +1,10 @@
 {-# LANGUAGE CPP #-}
+#ifndef MIN_VERSION_template_haskell
+#define MIN_VERSION_template_haskell(x,y,z) 1
+#endif
 module Data.Proxy.TH
   ( pr
-#if __GLASGOW_HASKELL__ >= 704
+#if MIN_VERSION_template_haskell(2,8,0)
   , pr1
 #endif
   ) where
@@ -52,17 +55,17 @@ pr = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) un
     [h@(t:_)]
        | isUpper t -> p $ head <$> cons
        | otherwise -> p $ varT $ mkName h
-#if __GLASGOW_HASKELL__ >= 704
+#if MIN_VERSION_template_haskell(2,8,0)
     _ -> p $ mkList <$> cons
 #endif
     where 
       ts = map strip $ splitOn ',' s
       cons = mapM (conT . mkName) ts
-#if __GLASGOW_HASKELL__ >= 704
+#if MIN_VERSION_template_haskell(2,8,0)
       mkList = foldr (AppT . AppT PromotedConsT) PromotedNilT
 #endif
 
-#if __GLASGOW_HASKELL__ >= 704
+#if MIN_VERSION_template_haskell(2,8,0)
 -- | Like 'pr', but takes a single type, which is used to produce a
 -- 'Proxy' for a single-element list containing only that type. This
 -- is useful for passing a single type to a function that wants a list

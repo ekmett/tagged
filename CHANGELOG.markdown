@@ -1,3 +1,7 @@
+0.8.0.1
+-------
+* Fix builds on GHC 7.4.
+
 0.8
 ---
 * Added `Data.Proxy.TH`, based on the code from `Frames` by Anthony Cowley.
