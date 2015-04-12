@@ -6,6 +6,7 @@
 {-# LANGUAGE PolyKinds #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE Trustworthy #-}
 #endif
 ----------------------------------------------------------------------------
@@ -53,6 +54,9 @@ import Data.Monoid
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ < 707
 import Data.Proxy
 #endif
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+import GHC.Generics (Generic, Generic1)
+#endif
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -63,8 +67,18 @@ import Data.Proxy
 -- argument, because the newtype is \"free\"
 newtype Tagged s b = Tagged { unTagged :: b } deriving
   ( Eq, Ord, Ix, Bounded
+#ifdef __GLASGOW_HASKELL__
+#if __GLASGOW_HASKELL__ >= 702
+  , Generic
+#if __GLASGOW_HASKELL__ >= 706
+  , Generic1
+#endif
+#endif
+
 #if __GLASGOW_HASKELL__ >= 707
   , Typeable
+#endif
+
 #endif
   )
 

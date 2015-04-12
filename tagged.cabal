@@ -36,6 +36,9 @@ library
     exposed-modules: Data.Proxy
     other-modules: Paths_tagged
 
+  if impl(ghc>=7.2 && <7.5)
+    build-depends: ghc-prim
+
   if impl(ghc>=7.6)
     exposed-modules: Data.Proxy.TH
     build-depends: template-haskell >= 2.8 && < 2.11
