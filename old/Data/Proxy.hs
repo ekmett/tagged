@@ -1,9 +1,9 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE KindSignatures #-}
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE PolyKinds #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
@@ -182,4 +182,10 @@ asProxyTypeOf = const
 
 -- | A concrete, promotable proxy type, for use at the kind level
 -- There are no instances for this because it is intended at the kind level only
-data KProxy (t :: *) = KProxy
+data KProxy 
+#if __GLASGOW_HASKELL__ >= 706
+            (t :: *)
+#else
+            t
+#endif
+    = KProxy

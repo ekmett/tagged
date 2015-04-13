@@ -55,7 +55,10 @@ import Data.Monoid
 import Data.Proxy
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
-import GHC.Generics (Generic, Generic1)
+import GHC.Generics (Generic)
+#if __GLASGOW_HASKELL__ >= 706
+import GHC.Generics (Generic1)
+#endif
 #endif
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
