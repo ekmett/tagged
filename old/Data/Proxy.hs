@@ -183,7 +183,7 @@ asProxyTypeOf = const
 -- | A concrete, promotable proxy type, for use at the kind level
 -- There are no instances for this because it is intended at the kind level only
 data KProxy 
-#if __GLASGOW_HASKELL__ >= 706
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
             (t :: *)
 #else
             t
