@@ -189,3 +189,6 @@ data KProxy
             t
 #endif
     = KProxy
+#if defined(LANGUAGE_DeriveDataTypeable)
+  deriving Typeable
+#endif
