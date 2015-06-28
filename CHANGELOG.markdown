@@ -1,3 +1,8 @@
+0.8.1
+-----
+* Add `KProxy` to the backwards compatibility `Data.Proxy` module.
+* Add a `Generic` instance to `Proxy`.
+
 0.8.0.1
 -------
 * Fix builds on GHC 7.4.

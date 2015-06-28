@@ -2,12 +2,14 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
+#if __GLASGOW_HASKELL__ >= 706
 {-# LANGUAGE PolyKinds #-}
 #endif
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE DeriveGeneric #-}
+#if __GLASGOW_HASKELL__ < 710
 {-# LANGUAGE Trustworthy #-}
+#endif
 #endif
 ----------------------------------------------------------------------------
 -- |
