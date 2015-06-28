@@ -3,12 +3,14 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE PolyKinds #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
 {-# LANGUAGE StandaloneDeriving #-}
 #endif
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE Trustworthy #-}
 #endif
 {-# OPTIONS_GHC -fno-warn-orphans #-}
@@ -28,6 +30,7 @@ module Data.Proxy
     -- * Proxy values
       Proxy(..)
     , asProxyTypeOf
+    , KProxy(..)
     ) where
 
 import Control.Applicative (Applicative(..))
@@ -38,12 +41,18 @@ import Data.Monoid
 #ifdef __GLASGOW_HASKELL__
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
+#if __GLASGOW_HASKELL__ >= 702
+import GHC.Generics (Generic)
+#endif
 #endif
 
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 707
 deriving instance Typeable Proxy
 #else
 data Proxy s = Proxy
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+  deriving Generic
+#endif
 #endif
 
 instance Eq (Proxy s) where
@@ -170,3 +179,16 @@ instance Traversable Proxy where
 asProxyTypeOf :: a -> proxy a -> a
 asProxyTypeOf = const
 {-# INLINE asProxyTypeOf #-}
+
+-- | A concrete, promotable proxy type, for use at the kind level
+-- There are no instances for this because it is intended at the kind level only
+data KProxy 
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 706
+            (t :: *)
+#else
+            t
+#endif
+    = KProxy
+#if defined(LANGUAGE_DeriveDataTypeable)
+  deriving Typeable
+#endif
