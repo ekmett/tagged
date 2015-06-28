@@ -41,22 +41,26 @@ module Data.Tagged
     , reproxy
     ) where
 
+#if __GLASGOW_HASKELL__ >= 710
+import Control.Applicative (liftA2)
+#else
 import Control.Applicative ((<$>), liftA2, Applicative(..))
+import Data.Traversable (Traversable(..))
+import Data.Monoid
+#endif
+import Data.Foldable (Foldable(..))
 import Control.Monad (liftM)
 #if __GLASGOW_HASKELL__ >= 709
 import Data.Bifunctor
 #endif
-import Data.Traversable (Traversable(..))
-import Data.Foldable (Foldable(..))
 #ifdef __GLASGOW_HASKELL__
 import Data.Data
 #endif
 import Data.Ix (Ix(..))
-import Data.Monoid
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ < 707
 import Data.Proxy
 #endif
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 import GHC.Generics (Generic)
 #if __GLASGOW_HASKELL__ >= 706
 import GHC.Generics (Generic1)
@@ -72,7 +76,6 @@ import GHC.Generics (Generic1)
 -- argument, because the newtype is \"free\"
 newtype Tagged s b = Tagged { unTagged :: b } deriving
   ( Eq, Ord, Ix, Bounded
-#ifdef __GLASGOW_HASKELL__
 #if __GLASGOW_HASKELL__ >= 702
   , Generic
 #if __GLASGOW_HASKELL__ >= 706
@@ -84,7 +87,6 @@ newtype Tagged s b = Tagged { unTagged :: b } deriving
   , Typeable
 #endif
 
-#endif
   )
 
 #ifdef __GLASGOW_HASKELL__
