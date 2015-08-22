@@ -49,6 +49,9 @@ import Data.Traversable (Traversable(..))
 import Data.Monoid
 #endif
 import Data.Foldable (Foldable(..))
+#ifdef MIN_VERSION_deepseq
+import Control.DeepSeq (NFData(..))
+#endif
 import Control.Monad (liftM)
 #if __GLASGOW_HASKELL__ >= 709
 import Data.Bifunctor
@@ -147,6 +150,11 @@ instance Functor (Tagged s) where
 instance Bifunctor Tagged where
     bimap _ g (Tagged b) = Tagged (g b)
     {-# INLINE bimap #-}
+#endif
+
+#ifdef MIN_VERSION_deepseq
+instance NFData b => NFData (Tagged s b) where
+    rnf (Tagged b) = rnf b
 #endif
 
 instance Applicative (Tagged s) where
