@@ -19,6 +19,14 @@ source-repository head
   type: git
   location: git://github.com/ekmett/tagged.git
 
+flag deepseq
+  description:
+    You can disable the use of the `deepseq` package using `-f-deepseq`.
+    .
+    Disabing this is an unsupported configuration, but it may be useful for accelerating builds in sandboxes for expert users.
+  default: True
+  manual: True
+
 library
   default-language: Haskell98
   other-extensions: CPP
@@ -42,3 +50,6 @@ library
   if impl(ghc>=7.6)
     exposed-modules: Data.Proxy.TH
     build-depends: template-haskell >= 2.8 && < 2.11
+
+  if flag(deepseq)
+    build-depends: deepseq >= 1.1 && < 1.5

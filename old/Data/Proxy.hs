@@ -34,6 +34,9 @@ module Data.Proxy
     ) where
 
 import Control.Applicative (Applicative(..))
+#ifdef MIN_VERSION_deepseq
+import Control.DeepSeq (NFData(..))
+#endif
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
 import Data.Ix (Ix(..))
@@ -123,6 +126,11 @@ instance Ix (Proxy s) where
 instance Bounded (Proxy s) where
     minBound = Proxy
     maxBound = Proxy
+
+#ifdef MIN_VERSION_deepseq
+instance NFData (Proxy s) where
+    rnf Proxy = ()
+#endif
 
 instance Functor Proxy where
     fmap _ _ = Proxy
