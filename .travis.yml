@@ -57,7 +57,8 @@ before_install:
      travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v$STACK_VERSION/stack-$STACK_VERSION-x86_64-$PLATFORM.gz | gunzip > ~/.cabal/bin/stack;
      chmod a+x ~/.cabal/bin/stack;
      if [ "$PLATFORM" = "osx" ]; then
-       scripts/travis_long stack --no-terminal setup
+       scripts/travis_long stack --no-terminal setup;
+     fi
    fi
 
 install:
