@@ -86,7 +86,7 @@ install:
          cp -a $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin installplan.txt $HOME/.cabsnap/;
        fi;;
      stack)
-       ./travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2;;
+       scripts/travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2;;
    esac
 
 # snapshot package-db on cache miss
@@ -103,7 +103,7 @@ script:
        cabal sdist || true;
        SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz && (cd dist && cabal install --force-reinstalls "$SRC_TGZ");;
      stack)
-       ./travis_long stack --no-terminal --skip-ghc-check build;;
+       scripts/travis_long stack --no-terminal --skip-ghc-check build;;
    esac
 
 notifications:
