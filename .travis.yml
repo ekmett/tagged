@@ -14,39 +14,39 @@ before_cache:
 
 matrix:
   include:
-    - env: CABALVER=1.16 GHCVER=7.4.2 BUILD=cabal PLATFORM=linux
+    - env: CABALVER=1.16 GHCVER=7.4.2 BUILD=cabal
       compiler: ": #GHC 7.4.2"
       addons: {apt: {packages: [cabal-install-1.16,ghc-7.4.2,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.16 GHCVER=7.6.3 BUILD=cabal PLATFORM=linux
+    - env: CABALVER=1.16 GHCVER=7.6.3 BUILD=cabal
       compiler: ": #GHC 7.6.3"
       addons: {apt: {packages: [cabal-install-1.16,ghc-7.6.3,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.18 GHCVER=7.8.4 BUILD=cabal PLATFORM=linux
+    - env: CABALVER=1.18 GHCVER=7.8.4 BUILD=cabal
       compiler: ": #GHC 7.8.4"
       addons: {apt: {packages: [cabal-install-1.18,ghc-7.8.4,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.18 GHCVER=7.8.4 BUILD=stack STACK_YAML=stack-7.8.yaml PLATFORM=linux STACK_OPTIONS=--skip-ghc-check
+    - env: CABALVER=1.18 GHCVER=7.8.4 BUILD=stack STACK_YAML=stack-7.8.yaml STACK_OPTIONS=--skip-ghc-check
       compiler: ": #GHC 7.8.4"
       addons: {apt: {packages: [cabal-install-1.18,ghc-7.8.4,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: BUILD=stack PLATFORM=osx STACK_YAML=stack-7.8.yaml
+    - env: BUILD=stack STACK_YAML=stack-7.8.yaml
       compiler: ": #GHC 7.8.4"
       os: osx
 
-    - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=cabal PLATFORM=linux
+    - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=cabal
       compiler: ": #GHC 7.10.1"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.1,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.18 GHCVER=7.10.1 BUILD=stack PLATFORM=linux STACK_OPTIONS=--skip-ghc-check
+    - env: CABALVER=1.18 GHCVER=7.10.1 BUILD=stack STACK_OPTIONS=--skip-ghc-check
       compiler: ": #GHC 7.10.1"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.1,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.22 GHCVER=7.10.2 BUILD=cabal PLATFORM=linux
+    - env: CABALVER=1.22 GHCVER=7.10.2 BUILD=cabal
       compiler: ": #GHC 7.10.2"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.2,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: BUILD=stack PLATFORM=osx
+    - env: BUILD=stack
       compiler: ": #GHC 7.10.2"
       os: osx
 
@@ -57,7 +57,7 @@ before_install:
      stack)
        export STACK_VERSION=0.1.3.0;
        mkdir -p ~/bin;
-       travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v$STACK_VERSION/stack-$STACK_VERSION-x86_64-$PLATFORM.gz | gunzip > ~/bin/stack;
+       travis_retry curl -L https://github.com/commercialhaskell/stack/releases/download/v$STACK_VERSION/stack-$STACK_VERSION-x86_64-$TRAVIS_OS_NAME.gz | gunzip > ~/bin/stack;
        chmod a+x ~/bin/stack;
        scripts/travis_long stack --no-terminal setup;
        export PATH=~/bin:$PATH;;
