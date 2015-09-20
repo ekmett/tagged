@@ -84,11 +84,9 @@ install:
          mkdir $HOME/.cabsnap;
          cp -a $HOME/.ghc $HOME/.cabsnap/ghc;
          cp -a $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin installplan.txt $HOME/.cabsnap/;
-       fi
-       ;;
+       fi;;
      stack)
-       ./travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2
-       ;;
+       ./travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2;;
    esac
 
 # snapshot package-db on cache miss
@@ -98,19 +96,14 @@ install:
 script:
  - case "$BUILD" in
      cabal)
-       cabal configure --enable-tests -v2;  # -v2 provides useful information for debugging
-       cabal build;   # this builds all libraries and executables (including tests)
+       cabal configure --enable-tests -v2;
+       cabal build;
        cabal test;
-       cabal bench || true;  # expected result: these will crash
-       cabal sdist || true;  # tests that a source-distribution can be generated
-       # Check that the resulting source distribution can be built & installed.
-       # If there are no other `.tar.gz` files in `dist`, this can be even simpler:
-       # `cabal install --force-reinstalls dist/*-*.tar.gz`
-       SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz && (cd dist && cabal install --force-reinstalls "$SRC_TGZ")
-       ;;
+       cabal bench || true;
+       cabal sdist || true;
+       SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz && (cd dist && cabal install --force-reinstalls "$SRC_TGZ");;
      stack)
-       ./travis_long stack --no-terminal --skip-ghc-check build
-       ;;
+       ./travis_long stack --no-terminal --skip-ghc-check build;;
    esac
 
 notifications:
