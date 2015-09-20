@@ -55,7 +55,7 @@ before_install:
 
 install:
  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
- - "sed -i 's/^jobs:.*$/jobs: 2/' $HOME/.cabal/config"
+# - "sed -i 's/^jobs:.*$/jobs: 2/' $HOME/.cabal/config"
  - case "$BUILD" in
      cabal)
        cabal --version
