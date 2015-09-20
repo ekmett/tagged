@@ -14,10 +14,6 @@ before_cache:
 
 matrix:
   include:
-    - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=stack PLATFORM=osx
-      compiler: ": #GHC 7.10.1"
-      os: osx
-
     - env: CABALVER=1.16 GHCVER=7.4.2 BUILD=cabal PLATFORM=linux
       compiler: ": #GHC 7.4.2"
       addons: {apt: {packages: [cabal-install-1.16,ghc-7.4.2,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
@@ -38,9 +34,13 @@ matrix:
       compiler: ": #GHC 7.10.1"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.1,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
-    - env: CABALVER=1.18 GHCVER=7.10.1 BUILD=stack STACK_YAML=stack.yaml PLATFORM=linux STACK_OPTIONS=--skip-ghc-check
+    - env: CABALVER=1.18 GHCVER=7.10.1 BUILD=stack PLATFORM=linux STACK_OPTIONS=--skip-ghc-check
       compiler: ": #GHC 7.10.1"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.1,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
+
+    - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=stack PLATFORM=osx
+      compiler: ": #GHC 7.10.1"
+      os: osx
 
     - env: CABALVER=1.22 GHCVER=7.10.2 BUILD=cabal PLATFORM=linux
       compiler: ": #GHC 7.10.2"
