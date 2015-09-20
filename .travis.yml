@@ -30,6 +30,10 @@ matrix:
       compiler: ": #GHC 7.8.4"
       addons: {apt: {packages: [cabal-install-1.18,ghc-7.8.4,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
 
+    - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=stack STACK_YAML=stack-7.8.yaml PLATFORM=osx
+      compiler: ": #GHC 7.8.4"
+      os: osx
+
     - env: CABALVER=1.22 GHCVER=7.10.1 BUILD=cabal PLATFORM=linux
       compiler: ": #GHC 7.10.1"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.1,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
@@ -45,6 +49,11 @@ matrix:
     - env: CABALVER=1.22 GHCVER=7.10.2 BUILD=cabal PLATFORM=linux
       compiler: ": #GHC 7.10.2"
       addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.2,alex-3.1.4,happy-1.19.5], sources: [hvr-ghc]}}
+
+    - env: CABALVER=1.22 GHCVER=7.10.2 BUILD=stack PLATFORM=osx
+      compiler: ": #GHC 7.10.2"
+      os: osx
+
 
 before_install:
  - unset CC
@@ -62,10 +71,9 @@ before_install:
    fi
 
 install:
- - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
-# - "sed -i 's/^jobs:.*$/jobs: 2/' $HOME/.cabal/config"
  - case "$BUILD" in
      cabal)
+       echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
        cabal --version;
        if [ -f $HOME/.cabal/packages/hackage.haskell.org/00-index.tar.gz ];
        then
