@@ -54,60 +54,64 @@ before_install:
    fi
 
 install:
- - cabal --version
  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
- - if [ "$BUILD" = "cabal" ]; then
-     if [ -f $HOME/.cabal/packages/hackage.haskell.org/00-index.tar.gz ];
-     then
-       zcat $HOME/.cabal/packages/hackage.haskell.org/00-index.tar.gz >
-            $HOME/.cabal/packages/hackage.haskell.org/00-index.tar;
-     fi;
-     travis_retry cabal update;
-     "sed -i 's/^jobs:.*$/jobs: 2/' $HOME/.cabal/config";
-     cabal install --only-dependencies --enable-tests --enable-benchmarks --dry -v > installplan.txt;
-     sed -i -e '1,/^Resolving /d' installplan.txt; cat installplan.txt;
-     if diff -u installplan.txt $HOME/.cabsnap/installplan.txt; then
-       echo "cabal build-cache HIT";
-       rm -rfv .ghc;
-       cp -a $HOME/.cabsnap/ghc $HOME/.ghc;
-       cp -a $HOME/.cabsnap/lib $HOME/.cabsnap/share $HOME/.cabsnap/bin $HOME/.cabal/;
-     else
-       echo "cabal build-cache MISS";
-       rm -rf $HOME/.cabsnap;
-       mkdir -p $HOME/.ghc $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin;
-       cabal install --only-dependencies --enable-tests --enable-benchmarks;
-       if [ "$GHCVER" = "7.10.1" ]; then cabal install Cabal-1.22.4.0; fi;
-     fi;
-     if [ ! -d $HOME/.cabsnap ]; then
-       echo "snapshotting package-db to build-cache";
-       mkdir $HOME/.cabsnap;
-       cp -a $HOME/.ghc $HOME/.cabsnap/ghc;
-       cp -a $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin installplan.txt $HOME/.cabsnap/;
-     fi;
-   fi
- - if [ "$BUILD" = "stack" ]; then
-     ./travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2;
-   fi
+ - case "$BUILD" in
+     cabal)
+       cabal --version
+       if [ -f $HOME/.cabal/packages/hackage.haskell.org/00-index.tar.gz ];
+       then
+         zcat $HOME/.cabal/packages/hackage.haskell.org/00-index.tar.gz >
+              $HOME/.cabal/packages/hackage.haskell.org/00-index.tar;
+       fi;
+       travis_retry cabal update;
+       "sed -i 's/^jobs:.*$/jobs: 2/' $HOME/.cabal/config";
+       cabal install --only-dependencies --enable-tests --enable-benchmarks --dry -v > installplan.txt;
+       sed -i -e '1,/^Resolving /d' installplan.txt; cat installplan.txt;
+       if diff -u installplan.txt $HOME/.cabsnap/installplan.txt; then
+         echo "cabal build-cache HIT";
+         rm -rfv .ghc;
+         cp -a $HOME/.cabsnap/ghc $HOME/.ghc;
+         cp -a $HOME/.cabsnap/lib $HOME/.cabsnap/share $HOME/.cabsnap/bin $HOME/.cabal/;
+       else
+         echo "cabal build-cache MISS";
+         rm -rf $HOME/.cabsnap;
+         mkdir -p $HOME/.ghc $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin;
+         cabal install --only-dependencies --enable-tests --enable-benchmarks;
+         if [ "$GHCVER" = "7.10.1" ]; then cabal install Cabal-1.22.4.0; fi;
+       fi;
+       if [ ! -d $HOME/.cabsnap ]; then
+         echo "snapshotting package-db to build-cache";
+         mkdir $HOME/.cabsnap;
+         cp -a $HOME/.ghc $HOME/.cabsnap/ghc;
+         cp -a $HOME/.cabal/lib $HOME/.cabal/share $HOME/.cabal/bin installplan.txt $HOME/.cabsnap/;
+       fi
+       ;;
+     stack)
+       ./travis_long stack --no-terminal --skip-ghc-check build --only-snapshot -j2
+       ;;
+   esac
 
 # snapshot package-db on cache miss
 
 # Here starts the actual work to be performed for the package under test;
 # any command which exits with a non-zero exit code causes the build to fail.
 script:
- - if [ "$BUILD" = "cabal" ]; then
-     cabal configure --enable-tests -v2;  # -v2 provides useful information for debugging
-     cabal build;   # this builds all libraries and executables (including tests)
-     cabal test;
-     cabal bench || true;  # expected result: these will crash
-     cabal sdist || true;  # tests that a source-distribution can be generated
-     # Check that the resulting source distribution can be built & installed.
-     # If there are no other `.tar.gz` files in `dist`, this can be even simpler:
-     # `cabal install --force-reinstalls dist/*-*.tar.gz`
-     SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz && (cd dist && cabal install --force-reinstalls "$SRC_TGZ");
-   fi
- - if [ "$BUILD" = "stack" ]; then
-     ./travis_long stack --no-terminal --skip-ghc-check build
-   fi
+ - case "$BUILD" in
+     cabal)
+       cabal configure --enable-tests -v2;  # -v2 provides useful information for debugging
+       cabal build;   # this builds all libraries and executables (including tests)
+       cabal test;
+       cabal bench || true;  # expected result: these will crash
+       cabal sdist || true;  # tests that a source-distribution can be generated
+       # Check that the resulting source distribution can be built & installed.
+       # If there are no other `.tar.gz` files in `dist`, this can be even simpler:
+       # `cabal install --force-reinstalls dist/*-*.tar.gz`
+       SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz && (cd dist && cabal install --force-reinstalls "$SRC_TGZ")
+       ;;
+     stack)
+       ./travis_long stack --no-terminal --skip-ghc-check build
+       ;;
+   esac
 
 notifications:
   irc:
