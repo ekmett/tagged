@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.8.1
+version:        0.8.2
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -49,7 +49,7 @@ library
 
   if impl(ghc>=7.6)
     exposed-modules: Data.Proxy.TH
-    build-depends: template-haskell >= 2.8 && < 2.11
+    build-depends: template-haskell >= 2.8 && < 2.12
 
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.5
