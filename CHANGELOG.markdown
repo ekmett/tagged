@@ -1,3 +1,8 @@
+0.8.2
+-------
+* `deepseq` support.
+* Widened `template-haskell` dependency bounds.
+
 0.8.1
 -----
 * Add `KProxy` to the backwards compatibility `Data.Proxy` module.
