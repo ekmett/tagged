@@ -162,13 +162,15 @@ instance Applicative (Tagged s) where
     {-# INLINE pure #-}
     Tagged f <*> Tagged x = Tagged (f x)
     {-# INLINE (<*>) #-}
+    _ *> n = n
+    {-# INLINE (*>) #-}
 
 instance Monad (Tagged s) where
-    return = Tagged
+    return = pure
     {-# INLINE return #-}
     Tagged m >>= k = k m
     {-# INLINE (>>=) #-}
-    _ >> n = n
+    (>>) = (*>)
     {-# INLINE (>>) #-}
 
 instance Foldable (Tagged s) where
