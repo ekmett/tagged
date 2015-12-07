@@ -11,7 +11,9 @@
 #endif
 #if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE TypeFamilies #-}
 #endif
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 ----------------------------------------------------------------------------
@@ -45,7 +47,7 @@ import Data.Monoid
 import GHC.Arr (unsafeIndex, unsafeRangeSize)
 import Data.Data
 #if __GLASGOW_HASKELL__ >= 702
-import GHC.Generics (Generic)
+import GHC.Generics hiding (Fixity(..))
 #endif
 #endif
 
@@ -55,6 +57,27 @@ deriving instance Typeable Proxy
 data Proxy s = Proxy
 #if __GLASGOW_HASKELL__ >= 702
   deriving Generic
+
+-- We have to implement the Generic1 instance manually due to an old
+-- bug in GHC 7.6. This is mostly copied from the output of
+--
+-- deriving instance Generic1 Proxy
+--
+-- Compiled with -ddump-deriv on a more recent GHC.
+instance Generic1 Proxy where
+  type Rep1 Proxy = D1 ProxyMetaData (C1 ProxyMetaCons U1)
+  from1 Proxy = M1 (M1 U1)
+  to1 (M1 (M1 U1)) = Proxy
+
+data ProxyMetaData
+data ProxyMetaCons
+
+instance Datatype ProxyMetaData where
+  datatypeName _ = "Proxy"
+  moduleName   _ = "Data.Proxy"
+
+instance Constructor ProxyMetaCons where
+  conName _ = "Proxy"
 #endif
 #endif
 
