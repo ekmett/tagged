@@ -2,7 +2,7 @@
 #ifdef LANGUAGE_DeriveDataTypeable
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
-#if __GLASGOW_HASKELL__ >= 706
+#if __GLASGOW_HASKELL__ >= 704
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE PolyKinds #-}
 #endif
@@ -214,7 +214,7 @@ asProxyTypeOf = const
 -- | A concrete, promotable proxy type, for use at the kind level
 -- There are no instances for this because it is intended at the kind level only
 data KProxy
-#if __GLASGOW_HASKELL__ >= 706
+#if __GLASGOW_HASKELL__ >= 704
             (t :: *)
 #else
             t
