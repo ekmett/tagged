@@ -1,3 +1,8 @@
+0.8.3
+-----
+* Manual `Generic1` support to work around a bug in GHC 7.6
+* Invert the dependency to supply the `Semigroup` instance ourselves when building on GHC 8
+
 0.8.2
 -------
 * `deepseq` support.
