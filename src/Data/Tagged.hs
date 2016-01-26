@@ -60,8 +60,11 @@ import Data.Bifunctor
 import Data.Data
 #endif
 import Data.Ix (Ix(..))
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ < 707
+#if __GLASGOW_HASKELL__ < 707
 import Data.Proxy
+#endif
+#if __GLASGOW_HASKELL__ >= 800
+import Data.Semigroup (Semigroup(..))
 #endif
 #if __GLASGOW_HASKELL__ >= 702
 import GHC.Generics (Generic)
@@ -137,9 +140,19 @@ instance Read b => Read (Tagged s b) where
     readsPrec d = readParen (d > 10) $ \r ->
         [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- readsPrec 11 s]
 
+#if __GLASGOW_HASKELL__ >= 800
+instance Semigroup a => Semigroup (Tagged s a) where
+    Tagged a <> Tagged b = Tagged (a <> b)
+    stimes n (Tagged a)  = Tagged (stimes n a)
+
+instance (Semigroup a, Monoid a) => Monoid (Tagged s a) where
+    mempty = Tagged mempty
+    mappend = (<>)
+#else
 instance Monoid a => Monoid (Tagged s a) where
     mempty = Tagged mempty
     mappend (Tagged a) (Tagged b) = Tagged (mappend a b)
+#endif
 
 instance Functor (Tagged s) where
     fmap f (Tagged x) = Tagged (f x)
