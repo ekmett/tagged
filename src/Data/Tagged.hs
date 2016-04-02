@@ -66,6 +66,9 @@ import Data.Proxy
 #if __GLASGOW_HASKELL__ >= 800
 import Data.Semigroup (Semigroup(..))
 #endif
+import Data.String (IsString(..))
+import Foreign.Ptr (castPtr)
+import Foreign.Storable (Storable(..))
 #if __GLASGOW_HASKELL__ >= 702
 import GHC.Generics (Generic)
 #if __GLASGOW_HASKELL__ >= 706
@@ -292,6 +295,23 @@ instance RealFloat a => RealFloat (Tagged s a) where
     isNegativeZero (Tagged x) = isNegativeZero x
     isIEEE (Tagged x) = isIEEE x
     atan2 = liftA2 atan2
+
+instance IsString a => IsString (Tagged s a) where
+    fromString = Tagged . fromString
+
+instance Storable a => Storable (Tagged s a) where
+    sizeOf t = sizeOf a
+      where
+        Tagged a = Tagged undefined `asTypeOf` t
+    alignment t = alignment a
+      where
+        Tagged a = Tagged undefined `asTypeOf` t
+    peek ptr = Tagged <$> peek (castPtr ptr)
+    poke ptr (Tagged a) = poke (castPtr ptr) a
+    peekElemOff ptr i = Tagged <$> peekElemOff (castPtr ptr) i
+    pokeElemOff ptr i (Tagged a) = pokeElemOff (castPtr ptr) i a
+    peekByteOff ptr i = Tagged <$> peekByteOff (castPtr ptr) i
+    pokeByteOff ptr i (Tagged a) = pokeByteOff (castPtr ptr) i a
 
 -- | Some times you need to change the tag you have lying around.
 -- Idiomatic usage is to make a new combinator for the relationship between the
