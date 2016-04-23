@@ -11,6 +11,8 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 #endif
+
+{-# OPTIONS_GHC -fno-warn-deprecations #-}
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
@@ -48,6 +50,7 @@ import Control.Applicative ((<$>), liftA2, Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Monoid
 #endif
+import Data.Bits
 import Data.Foldable (Foldable(..))
 #ifdef MIN_VERSION_deepseq
 import Control.DeepSeq (NFData(..))
@@ -295,6 +298,43 @@ instance RealFloat a => RealFloat (Tagged s a) where
     isNegativeZero (Tagged x) = isNegativeZero x
     isIEEE (Tagged x) = isIEEE x
     atan2 = liftA2 atan2
+
+instance Bits a => Bits (Tagged s a) where
+    Tagged a .&. Tagged b = Tagged (a .&. b)
+    Tagged a .|. Tagged b = Tagged (a .|. b)
+    xor (Tagged a) (Tagged b) = Tagged (xor a b)
+    complement (Tagged a) = Tagged (complement a)
+    shift (Tagged a) i = Tagged (shift a i)
+    shiftL (Tagged a) i = Tagged (shiftL a i)
+    shiftR (Tagged a) i = Tagged (shiftR a i)
+    rotate (Tagged a) i = Tagged (rotate a i)
+    rotateL (Tagged a) i = Tagged (rotateL a i)
+    rotateR (Tagged a) i = Tagged (rotateR a i)
+    bit i = Tagged (bit i)
+    setBit (Tagged a) i = Tagged (setBit a i)
+    clearBit (Tagged a) i = Tagged (clearBit a i)
+    complementBit (Tagged a) i = Tagged (complementBit a i)
+    testBit (Tagged a) i = testBit a i
+    isSigned (Tagged a) = isSigned a
+    bitSize (Tagged a) = bitSize a -- deprecated, but still required :(
+#if __GLASGOW_HASKELL__ >= 704
+    unsafeShiftL (Tagged a) i = Tagged (unsafeShiftL a i)
+    unsafeShiftR (Tagged a) i = Tagged (unsafeShiftR a i)
+    popCount (Tagged a) = popCount a
+#endif
+#if __GLASGOW_HASKELL__ >= 708
+    bitSizeMaybe (Tagged a) = bitSizeMaybe a
+    zeroBits = Tagged zeroBits
+#endif
+
+#if __GLASGOW_HASKELL__ >= 708
+instance FiniteBits a => FiniteBits (Tagged s a) where
+    finiteBitSize (Tagged a) = finiteBitSize a
+# if __GLASGOW_HASKELL__ >= 710
+    countLeadingZeros (Tagged a) = countLeadingZeros a
+    countTrailingZeros (Tagged a) = countTrailingZeros a
+# endif
+#endif
 
 instance IsString a => IsString (Tagged s a) where
     fromString = Tagged . fromString
