@@ -35,7 +35,11 @@ module Data.Proxy
     , KProxy(..)
     ) where
 
-import Control.Applicative (Applicative(..))
+import Control.Applicative (Applicative(..), Alternative(..))
+import Control.Monad (MonadPlus(..))
+#if MIN_VERSION_base(4,4,0)
+import Control.Monad.Zip (MonadZip(..))
+#endif
 #ifdef MIN_VERSION_deepseq
 import Control.DeepSeq (NFData(..))
 #endif
@@ -165,6 +169,12 @@ instance Applicative Proxy where
     _ <*> _ = Proxy
     {-# INLINE (<*>) #-}
 
+instance Alternative Proxy where
+    empty = Proxy
+    {-# INLINE empty #-}
+    _ <|> _ = Proxy
+    {-# INLINE (<|>) #-}
+
 instance Monoid (Proxy s) where
     mempty = Proxy
     {-# INLINE mempty #-}
@@ -178,6 +188,18 @@ instance Monad Proxy where
     {-# INLINE return #-}
     _ >>= _ = Proxy
     {-# INLINE (>>=) #-}
+
+instance MonadPlus Proxy where
+    mzero = Proxy
+    {-# INLINE mzero #-}
+    mplus _ _ = Proxy
+    {-# INLINE mplus #-}
+
+#if MIN_VERSION_base(4,4,0)
+instance MonadZip Proxy where
+    mzipWith _ _ _ = Proxy
+    {-# INLINE mzipWith #-}
+#endif
 
 instance Foldable Proxy where
     foldMap _ _ = mempty
