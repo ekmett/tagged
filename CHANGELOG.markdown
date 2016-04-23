@@ -1,3 +1,8 @@
+0.8.4
+-----
+* Backport the `Alternative`, `MonadPlus`, and `MonadZip` instances for `Proxy` from `base-4.9`
+* Add `Bits`, `FiniteBits`, `IsString`, and `Storable` instances for `Tagged`
+
 0.8.3
 -----
 * Manual `Generic1` support to work around a bug in GHC 7.6
