@@ -1,3 +1,7 @@
+next
+----
+* Support `Data.Bifoldable`/`Data.Bitraversable` in `base` for GHC 8.1+.
+
 0.8.4
 -----
 * Backport the `Alternative`, `MonadPlus`, and `MonadZip` instances for `Proxy` from `base-4.9`

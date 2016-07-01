@@ -59,6 +59,10 @@ import Control.Monad (liftM)
 #if __GLASGOW_HASKELL__ >= 709
 import Data.Bifunctor
 #endif
+#if __GLASGOW_HASKELL__ >= 801
+import Data.Bifoldable (Bifoldable(..))
+import Data.Bitraversable (Bitraversable(..))
+#endif
 #ifdef __GLASGOW_HASKELL__
 import Data.Data
 #endif
@@ -169,6 +173,17 @@ instance Functor (Tagged s) where
 instance Bifunctor Tagged where
     bimap _ g (Tagged b) = Tagged (g b)
     {-# INLINE bimap #-}
+#endif
+
+#if __GLASGOW_HASKELL__ >= 801
+-- these instances are provided by the bifunctors package for GHC<8.1
+instance Bifoldable Tagged where
+    bifoldMap _ g (Tagged b) = g b
+    {-# INLINE bifoldMap #-}
+
+instance Bitraversable Tagged where
+    bitraverse _ g (Tagged b) = Tagged <$> g b
+    {-# INLINE bitraverse #-}
 #endif
 
 #ifdef MIN_VERSION_deepseq
