@@ -43,6 +43,9 @@ import Control.Monad.Zip (MonadZip(..))
 #ifdef MIN_VERSION_deepseq
 import Control.DeepSeq (NFData(..))
 #endif
+#ifdef MIN_VERSION_transformers
+import Data.Functor.Classes (Eq1(..), Ord1(..), Read1(..), Show1(..))
+#endif
 import Data.Traversable (Traversable(..))
 import Data.Foldable (Foldable(..))
 import Data.Ix (Ix(..))
@@ -157,6 +160,35 @@ instance Bounded (Proxy s) where
 #ifdef MIN_VERSION_deepseq
 instance NFData (Proxy s) where
     rnf Proxy = ()
+#endif
+
+#ifdef MIN_VERSION_transformers
+# if MIN_VERSION_transformers(0,4,0) && !(MIN_VERSION_transformers(0,5,0))
+instance Eq1 Proxy where
+  eq1 = (==)
+
+instance Ord1 Proxy where
+  compare1 = compare
+
+instance Read1 Proxy where
+  readsPrec1 = readsPrec
+
+instance Show1 Proxy where
+  showsPrec1 = showsPrec
+# else
+instance Eq1 Proxy where
+  liftEq _ _ _ = True
+
+instance Ord1 Proxy where
+  liftCompare _ _ _ = EQ
+
+instance Show1 Proxy where
+  liftShowsPrec _ _ _ _ = showString "Proxy"
+
+instance Read1 Proxy where
+  liftReadsPrec _ _ d =
+    readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
+# endif
 #endif
 
 instance Functor Proxy where

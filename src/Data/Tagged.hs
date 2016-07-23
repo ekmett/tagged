@@ -55,6 +55,13 @@ import Data.Foldable (Foldable(..))
 #ifdef MIN_VERSION_deepseq
 import Control.DeepSeq (NFData(..))
 #endif
+#ifdef MIN_VERSION_transformers
+import Data.Functor.Classes ( Eq1(..), Ord1(..), Read1(..), Show1(..)
+# if !(MIN_VERSION_transformers(0,4,0)) || MIN_VERSION_transformers(0,5,0)
+                            , Eq2(..), Ord2(..), Read2(..), Show2(..)
+# endif
+                            )
+#endif
 import Control.Monad (liftM)
 #if __GLASGOW_HASKELL__ >= 709
 import Data.Bifunctor
@@ -189,6 +196,52 @@ instance Bitraversable Tagged where
 #ifdef MIN_VERSION_deepseq
 instance NFData b => NFData (Tagged s b) where
     rnf (Tagged b) = rnf b
+#endif
+
+#ifdef MIN_VERSION_transformers
+# if MIN_VERSION_transformers(0,4,0) && !(MIN_VERSION_transformers(0,5,0))
+instance Eq1 (Tagged s) where
+    eq1 = (==)
+
+instance Ord1 (Tagged s) where
+    compare1 = compare
+
+instance Read1 (Tagged s) where
+    readsPrec1 = readsPrec
+
+instance Show1 (Tagged s) where
+    showsPrec1 = showsPrec
+# else
+instance Eq1 (Tagged s) where
+    liftEq eq (Tagged a) (Tagged b) = eq a b
+
+instance Ord1 (Tagged s) where
+    liftCompare cmp (Tagged a) (Tagged b) = cmp a b
+
+instance Read1 (Tagged s) where
+    liftReadsPrec rp _ d = readParen (d > 10) $ \r ->
+        [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- rp 11 s]
+
+instance Show1 (Tagged s) where
+    liftShowsPrec sp _ n (Tagged b) = showParen (n > 10) $
+        showString "Tagged " .
+        sp 11 b
+
+instance Eq2 Tagged where
+    liftEq2 _ eq (Tagged a) (Tagged b) = eq a b
+
+instance Ord2 Tagged where
+    liftCompare2 _ cmp (Tagged a) (Tagged b) = cmp a b
+
+instance Read2 Tagged where
+    liftReadsPrec2 _ _ rp _ d = readParen (d > 10) $ \r ->
+        [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- rp 11 s]
+
+instance Show2 Tagged where
+    liftShowsPrec2 _ _ sp _ n (Tagged b) = showParen (n > 10) $
+        showString "Tagged " .
+        sp 11 b
+# endif
 #endif
 
 instance Applicative (Tagged s) where
