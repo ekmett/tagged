@@ -1,6 +1,8 @@
-next
-----
+0.8.5
+-----
 * Support `Data.Bifoldable`/`Data.Bitraversable` in `base` for GHC 8.1+.
+* Backport the `Eq1`, `Ord1`, `Read1`, and `Show1` instances for `Proxy` from `base-4.9`
+* Add `Eq1`/`2`, `Ord1`/`2`, `Read1`/`2`, and `Show1`/`2` instances for `Tagged`
 
 0.8.4
 -----
