@@ -43,7 +43,7 @@ module Data.Tagged
     , reproxy
     ) where
 
-#if __GLASGOW_HASKELL__ >= 710
+#if MIN_VERSION_base(4,8,0)
 import Control.Applicative (liftA2)
 #else
 import Control.Applicative ((<$>), liftA2, Applicative(..))
@@ -63,10 +63,10 @@ import Data.Functor.Classes ( Eq1(..), Ord1(..), Read1(..), Show1(..)
                             )
 #endif
 import Control.Monad (liftM)
-#if __GLASGOW_HASKELL__ >= 709
+#if MIN_VERSION_base(4,8,0)
 import Data.Bifunctor
 #endif
-#if __GLASGOW_HASKELL__ >= 801
+#if MIN_VERSION_base(4,10,0)
 import Data.Bifoldable (Bifoldable(..))
 import Data.Bitraversable (Bitraversable(..))
 #endif
@@ -77,7 +77,7 @@ import Data.Ix (Ix(..))
 #if __GLASGOW_HASKELL__ < 707
 import Data.Proxy
 #endif
-#if __GLASGOW_HASKELL__ >= 800
+#if MIN_VERSION_base(4,9,0)
 import Data.Semigroup (Semigroup(..))
 #endif
 import Data.String (IsString(..))
@@ -157,7 +157,7 @@ instance Read b => Read (Tagged s b) where
     readsPrec d = readParen (d > 10) $ \r ->
         [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- readsPrec 11 s]
 
-#if __GLASGOW_HASKELL__ >= 800
+#if MIN_VERSION_base(4,9,0)
 instance Semigroup a => Semigroup (Tagged s a) where
     Tagged a <> Tagged b = Tagged (a <> b)
     stimes n (Tagged a)  = Tagged (stimes n a)
@@ -175,14 +175,14 @@ instance Functor (Tagged s) where
     fmap f (Tagged x) = Tagged (f x)
     {-# INLINE fmap #-}
 
-#if __GLASGOW_HASKELL__ >= 709
+#if MIN_VERSION_base(4,8,0)
 -- this instance is provided by the bifunctors package for GHC<7.9
 instance Bifunctor Tagged where
     bimap _ g (Tagged b) = Tagged (g b)
     {-# INLINE bimap #-}
 #endif
 
-#if __GLASGOW_HASKELL__ >= 801
+#if MIN_VERSION_base(4,10,0)
 -- these instances are provided by the bifunctors package for GHC<8.1
 instance Bifoldable Tagged where
     bifoldMap _ g (Tagged b) = g b
@@ -385,20 +385,20 @@ instance Bits a => Bits (Tagged s a) where
     testBit (Tagged a) i = testBit a i
     isSigned (Tagged a) = isSigned a
     bitSize (Tagged a) = bitSize a -- deprecated, but still required :(
-#if __GLASGOW_HASKELL__ >= 704
+#if MIN_VERSION_base(4,5,0)
     unsafeShiftL (Tagged a) i = Tagged (unsafeShiftL a i)
     unsafeShiftR (Tagged a) i = Tagged (unsafeShiftR a i)
     popCount (Tagged a) = popCount a
 #endif
-#if __GLASGOW_HASKELL__ >= 708
+#if MIN_VERSION_base(4,7,0)
     bitSizeMaybe (Tagged a) = bitSizeMaybe a
     zeroBits = Tagged zeroBits
 #endif
 
-#if __GLASGOW_HASKELL__ >= 708
+#if MIN_VERSION_base(4,7,0)
 instance FiniteBits a => FiniteBits (Tagged s a) where
     finiteBitSize (Tagged a) = finiteBitSize a
-# if __GLASGOW_HASKELL__ >= 710
+# if MIN_VERSION_base(4,8,0)
     countLeadingZeros (Tagged a) = countLeadingZeros a
     countTrailingZeros (Tagged a) = countTrailingZeros a
 # endif
