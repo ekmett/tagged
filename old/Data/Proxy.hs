@@ -98,7 +98,7 @@ instance Show (Proxy s) where
   showsPrec _ _ = showString "Proxy"
 
 instance Read (Proxy s) where
-  readsPrec d = readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
+  readsPrec _ = readParen False (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
 
 #ifdef __GLASGOW_HASKELL__
 #if __GLASGOW_HASKELL__ < 707
@@ -186,8 +186,8 @@ instance Show1 Proxy where
   liftShowsPrec _ _ _ _ = showString "Proxy"
 
 instance Read1 Proxy where
-  liftReadsPrec _ _ d =
-    readParen (d > 10) (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
+  liftReadsPrec _ _ _ =
+    readParen False (\r -> [(Proxy, s) | ("Proxy",s) <- lex r ])
 # endif
 #endif
 
