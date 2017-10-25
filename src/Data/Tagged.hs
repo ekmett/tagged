@@ -341,7 +341,7 @@ instance Floating a => Floating (Tagged s a) where
     acosh = fmap acosh
     atanh = fmap atanh
     (**) = liftA2 (**)
-    logBase = liftA2 (**)
+    logBase = liftA2 logBase
 
 instance RealFrac a => RealFrac (Tagged s a) where
     properFraction (Tagged x) = (a, Tagged b) where
