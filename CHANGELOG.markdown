@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+0.8.6 [2018.07.02]
+------------------
 * Make the `Read(1)` instances for `Proxy` ignore the precedence argument,
   mirroring similar changes to `base`
   [here](http://git.haskell.org/ghc.git/commitdiff/8fd959998e900dffdb7f752fcd42df7aaedeae6e).
