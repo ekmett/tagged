@@ -1,3 +1,12 @@
+next [????.??.??]
+-----------------
+* Make the `Read(1)` instances for `Proxy` ignore the precedence argument,
+  mirroring similar changes to `base`
+  [here](http://git.haskell.org/ghc.git/commitdiff/8fd959998e900dffdb7f752fcd42df7aaedeae6e).
+* Fix a bug in the `Floating` instance for `Tagged` in which `logBase` was
+  defined in terms of `(**)`.
+* Avoid incurring some dependencies when using recent GHCs.
+
 0.8.5
 -----
 * Support `Data.Bifoldable`/`Data.Bitraversable` in `base` for GHC 8.1+.
