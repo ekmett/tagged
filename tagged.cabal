@@ -24,6 +24,7 @@ tested-with:   GHC == 7.0.4
              , GHC == 8.2.2
              , GHC == 8.4.4
              , GHC == 8.6.4
+             , GHC == 8.8.1
 
 source-repository head
   type: git
@@ -67,7 +68,7 @@ library
 
   if impl(ghc>=7.6)
     exposed-modules: Data.Proxy.TH
-    build-depends: template-haskell >= 2.8 && < 2.15
+    build-depends: template-haskell >= 2.8 && < 2.16
 
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.5
