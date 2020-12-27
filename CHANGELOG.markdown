@@ -1,3 +1,7 @@
+0.8.6.1 [20yy.mm.dd]
+------------------
+* Mark all modules as explicitly Safe or Trustworthy.
+
 0.8.6 [2018.07.02]
 ------------------
 * Make the `Read(1)` instances for `Proxy` ignore the precedence argument,

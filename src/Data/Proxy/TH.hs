@@ -2,6 +2,12 @@
 #ifndef MIN_VERSION_template_haskell
 #define MIN_VERSION_template_haskell(x,y,z) 1
 #endif
+-- template-haskell is only safe since GHC-8.2
+#if __GLASGOW_HASKELL__ >= 802
+{-# LANGUAGE Safe #-}
+#elif __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 module Data.Proxy.TH
   ( pr
 #if MIN_VERSION_template_haskell(2,8,0)
