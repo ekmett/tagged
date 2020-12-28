@@ -7,9 +7,12 @@
 #endif
 #if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE DeriveGeneric #-}
-#if __GLASGOW_HASKELL__ < 710
-{-# LANGUAGE Trustworthy #-}
 #endif
+-- manual generics instances are not safe
+#if __GLASGOW_HASKELL__ >= 707
+{-# LANGUAGE Safe #-}
+#elif __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
 #endif
 
 {-# OPTIONS_GHC -fno-warn-deprecations #-}
