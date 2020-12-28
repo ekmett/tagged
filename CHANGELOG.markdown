@@ -1,5 +1,5 @@
-0.8.6.1 [20yy.mm.dd]
-------------------
+0.8.6.1 [2020.12.28]
+--------------------
 * Mark all modules as explicitly Safe or Trustworthy.
 
 0.8.6 [2018.07.02]
