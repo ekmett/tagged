@@ -75,7 +75,7 @@ library
 
   if impl(ghc>=7.6)
     exposed-modules: Data.Proxy.TH
-    build-depends: template-haskell >= 2.8 && < 2.18
+    build-depends: template-haskell >= 2.8 && < 2.19
 
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.5
