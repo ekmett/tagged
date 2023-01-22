@@ -46,9 +46,9 @@ module Data.Tagged
     , reproxy
     ) where
 
-#if MIN_VERSION_base(4,8,0)
+#if MIN_VERSION_base(4,8,0) && !(MIN_VERSION_base(4,18,0))
 import Control.Applicative (liftA2)
-#else
+#elif !(MIN_VERSION_base(4,8,0))
 import Control.Applicative ((<$>), liftA2, Applicative(..))
 import Data.Traversable (Traversable(..))
 import Data.Monoid
