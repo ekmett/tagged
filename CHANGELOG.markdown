@@ -1,3 +1,11 @@
+next [????.??.??]
+-----------------
+* Define `Foldable1` and `Bifoldable1` instances for `Tagged`. These instances
+  were originally defined in the `semigroupoids` library, and they have now
+  been migrated to `tagged` as a side effect of adapting to
+  [this Core Libraries Proposal](https://github.com/haskell/core-libraries-committee/issues/9),
+  which adds `Foldable1` and `Bifoldable1` to `base`.
+
 0.8.6.1 [2020.12.28]
 --------------------
 * Mark all modules as explicitly Safe or Trustworthy.

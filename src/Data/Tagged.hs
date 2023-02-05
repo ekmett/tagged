@@ -73,6 +73,10 @@ import Data.Bifunctor
 import Data.Bifoldable (Bifoldable(..))
 import Data.Bitraversable (Bitraversable(..))
 #endif
+#if MIN_VERSION_base(4,18,0)
+import Data.Foldable1 (Foldable1(..))
+import Data.Bifoldable1 (Bifoldable1(..))
+#endif
 #ifdef __GLASGOW_HASKELL__
 import Data.Data
 #endif
@@ -194,6 +198,16 @@ instance Bifoldable Tagged where
 instance Bitraversable Tagged where
     bitraverse _ g (Tagged b) = Tagged <$> g b
     {-# INLINE bitraverse #-}
+#endif
+
+#if MIN_VERSION_base(4,18,0)
+instance Foldable1 (Tagged a) where
+  foldMap1 f (Tagged a) = f a
+  {-# INLINE foldMap1 #-}
+
+instance Bifoldable1 Tagged where
+  bifoldMap1 _ g (Tagged b) = g b
+  {-# INLINE bifoldMap1 #-}
 #endif
 
 #ifdef MIN_VERSION_deepseq
