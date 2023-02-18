@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+0.8.7 [2023.02.18]
+------------------
 * Define `Foldable1` and `Bifoldable1` instances for `Tagged`. These instances
   were originally defined in the `semigroupoids` library, and they have now
   been migrated to `tagged` as a side effect of adapting to
