@@ -1,3 +1,7 @@
+next [????.??.??]
+-----------------
+* Allow building with GHC 9.8.
+
 0.8.7 [2023.02.18]
 ------------------
 * Define `Foldable1` and `Bifoldable1` instances for `Tagged`. These instances
