@@ -59,7 +59,7 @@ pr = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) un
   mkProxy :: (TypeQ -> r) -> String -> r
   mkProxy p s = case ts of
     [h@(t:_)]
-       | isUpper t -> p $ head <$> cons
+       | isUpper t -> p $ conT $ mkName h
        | otherwise -> p $ varT $ mkName h
 #if MIN_VERSION_template_haskell(2,8,0)
     _ -> p $ mkList <$> cons
