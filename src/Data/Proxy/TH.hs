@@ -64,7 +64,7 @@ pr = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) un
 #if MIN_VERSION_template_haskell(2,8,0)
     _ -> p $ mkList <$> cons
 #endif
-    where 
+    where
       ts = map strip $ splitOn ',' s
       cons = mapM (conT . mkName) ts
 #if MIN_VERSION_template_haskell(2,8,0)
@@ -82,7 +82,7 @@ pr1 :: QuasiQuoter
 pr1 = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) undefined where
   sing x = AppT (AppT PromotedConsT x) PromotedNilT
   mkProxy p s = case s of
-    t:_ 
+    t:_
       | isUpper t -> p (fmap sing (conT $ mkName s))
       | otherwise -> p (fmap sing (varT $ mkName s))
     _ -> error "Empty string passed to pr1"
@@ -94,7 +94,7 @@ splitOn d = go where
   go [] = []
   go xs = case t of
       [] -> [h]
-      (_:t') -> h : go t' 
+      (_:t') -> h : go t'
     where (h,t) = break (== d) xs
 
 -- | Remove white space from both ends of a 'String'.
