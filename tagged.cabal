@@ -51,40 +51,22 @@ flag transformers
 library
   default-language: Haskell98
   other-extensions: CPP
-  build-depends: base >= 2 && < 5
+  build-depends:
+    base >= 4.9 && < 5,
+    template-haskell >= 2.11 && < 2.23
   ghc-options: -Wall
   hs-source-dirs: src
-  exposed-modules: Data.Tagged
+  exposed-modules:
+    Data.Proxy.TH
+    Data.Tagged
 
   if impl(ghc >= 9.0)
     -- these flags may abort compilation with GHC-8.10
     -- https://gitlab.haskell.org/ghc/ghc/-/merge_requests/3295
     ghc-options: -Winferred-safe-imports -Wmissing-safe-haskell-mode
 
-  if !impl(hugs)
-    cpp-options: -DLANGUAGE_DeriveDataTypeable
-    other-extensions: DeriveDataTypeable
-
-  if impl(ghc<7.7)
-    hs-source-dirs: old
-    exposed-modules: Data.Proxy
-    other-modules: Paths_tagged
-
-  if impl(ghc>=7.2 && <7.5)
-    build-depends: ghc-prim
-
-  if impl(ghc>=7.6)
-    exposed-modules: Data.Proxy.TH
-    build-depends: template-haskell >= 2.8 && < 2.23
-
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.6
 
   if flag(transformers)
-    build-depends: transformers        >= 0.2 && < 0.7
-
-    -- Ensure Data.Functor.Classes is always available
-    if impl(ghc >= 7.10) || impl(ghcjs)
-      build-depends: transformers >= 0.4.2.0
-    else
-      build-depends: transformers-compat >= 0.5 && < 1
+    build-depends: transformers >= 0.4.2.0 && < 0.7

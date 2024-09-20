@@ -1,21 +1,9 @@
 {-# LANGUAGE CPP #-}
-#ifdef LANGUAGE_DeriveDataTypeable
-{-# LANGUAGE DeriveDataTypeable #-}
-#endif
-#if __GLASGOW_HASKELL__ >= 706
-{-# LANGUAGE PolyKinds #-}
-#endif
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE DeriveGeneric #-}
-#endif
--- manual generics instances are not safe
-#if __GLASGOW_HASKELL__ >= 707
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE Safe #-}
-#elif __GLASGOW_HASKELL__ >= 702
-{-# LANGUAGE Trustworthy #-}
-#endif
 
-{-# OPTIONS_GHC -fno-warn-deprecations #-}
+{-# OPTIONS_GHC -Wno-deprecations #-}
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
@@ -46,12 +34,8 @@ module Data.Tagged
     , reproxy
     ) where
 
-#if MIN_VERSION_base(4,8,0) && !(MIN_VERSION_base(4,18,0))
+#if !(MIN_VERSION_base(4,18,0))
 import Control.Applicative (liftA2)
-#elif !(MIN_VERSION_base(4,8,0))
-import Control.Applicative ((<$>), liftA2, Applicative(..))
-import Data.Traversable (Traversable(..))
-import Data.Monoid
 #endif
 import Data.Bits
 import Data.Foldable (Foldable(..))
@@ -66,9 +50,7 @@ import Data.Functor.Classes ( Eq1(..), Ord1(..), Read1(..), Show1(..)
                             )
 #endif
 import Control.Monad (liftM)
-#if MIN_VERSION_base(4,8,0)
 import Data.Bifunctor
-#endif
 #if MIN_VERSION_base(4,10,0)
 import Data.Bifoldable (Bifoldable(..))
 import Data.Bitraversable (Bitraversable(..))
@@ -81,21 +63,11 @@ import Data.Bifoldable1 (Bifoldable1(..))
 import Data.Data
 #endif
 import Data.Ix (Ix(..))
-#if __GLASGOW_HASKELL__ < 707
-import Data.Proxy
-#endif
-#if MIN_VERSION_base(4,9,0)
 import Data.Semigroup (Semigroup(..))
-#endif
 import Data.String (IsString(..))
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (Storable(..))
-#if __GLASGOW_HASKELL__ >= 702
-import GHC.Generics (Generic)
-#if __GLASGOW_HASKELL__ >= 706
-import GHC.Generics (Generic1)
-#endif
-#endif
+import GHC.Generics (Generic, Generic1)
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -107,35 +79,10 @@ import GHC.Generics (Generic1)
 --
 -- 'Tagged' has kind @k -> * -> *@ if the compiler supports @PolyKinds@, therefore
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
-newtype Tagged s b = Tagged { unTagged :: b } deriving
-  ( Eq, Ord, Ix, Bounded
-#if __GLASGOW_HASKELL__ >= 702
-  , Generic
-#if __GLASGOW_HASKELL__ >= 706
-  , Generic1
-#endif
-#endif
-
-#if __GLASGOW_HASKELL__ >= 707
-  , Typeable
-#endif
-
-  )
+newtype Tagged s b = Tagged { unTagged :: b }
+  deriving (Eq, Ord, Ix, Bounded, Generic, Generic1)
 
 #ifdef __GLASGOW_HASKELL__
-#if __GLASGOW_HASKELL__ < 707
-instance Typeable2 Tagged where
-  typeOf2 _ = mkTyConApp taggedTyCon []
-
-taggedTyCon :: TyCon
-#if __GLASGOW_HASKELL__ < 704
-taggedTyCon = mkTyCon "Data.Tagged.Tagged"
-#else
-taggedTyCon = mkTyCon3 "tagged" "Data.Tagged" "Tagged"
-#endif
-
-#endif
-
 instance (Data s, Data b) => Data (Tagged s b) where
   gfoldl f z (Tagged b) = z Tagged `f` b
   toConstr _ = taggedConstr
@@ -164,7 +111,6 @@ instance Read b => Read (Tagged s b) where
     readsPrec d = readParen (d > 10) $ \r ->
         [(Tagged a, t) | ("Tagged", s) <- lex r, (a, t) <- readsPrec 11 s]
 
-#if MIN_VERSION_base(4,9,0)
 instance Semigroup a => Semigroup (Tagged s a) where
     Tagged a <> Tagged b = Tagged (a <> b)
     stimes n (Tagged a)  = Tagged (stimes n a)
@@ -172,22 +118,15 @@ instance Semigroup a => Semigroup (Tagged s a) where
 instance (Semigroup a, Monoid a) => Monoid (Tagged s a) where
     mempty = Tagged mempty
     mappend = (<>)
-#else
-instance Monoid a => Monoid (Tagged s a) where
-    mempty = Tagged mempty
-    mappend (Tagged a) (Tagged b) = Tagged (mappend a b)
-#endif
 
 instance Functor (Tagged s) where
     fmap f (Tagged x) = Tagged (f x)
     {-# INLINE fmap #-}
 
-#if MIN_VERSION_base(4,8,0)
 -- this instance is provided by the bifunctors package for GHC<7.9
 instance Bifunctor Tagged where
     bimap _ g (Tagged b) = Tagged (g b)
     {-# INLINE bimap #-}
-#endif
 
 #if MIN_VERSION_base(4,10,0)
 -- these instances are provided by the bifunctors package for GHC<8.1
@@ -216,19 +155,6 @@ instance NFData b => NFData (Tagged s b) where
 #endif
 
 #ifdef MIN_VERSION_transformers
-# if MIN_VERSION_transformers(0,4,0) && !(MIN_VERSION_transformers(0,5,0))
-instance Eq1 (Tagged s) where
-    eq1 = (==)
-
-instance Ord1 (Tagged s) where
-    compare1 = compare
-
-instance Read1 (Tagged s) where
-    readsPrec1 = readsPrec
-
-instance Show1 (Tagged s) where
-    showsPrec1 = showsPrec
-# else
 instance Eq1 (Tagged s) where
     liftEq eq (Tagged a) (Tagged b) = eq a b
 
@@ -258,7 +184,6 @@ instance Show2 Tagged where
     liftShowsPrec2 _ _ sp _ n (Tagged b) = showParen (n > 10) $
         showString "Tagged " .
         sp 11 b
-# endif
 #endif
 
 instance Applicative (Tagged s) where
@@ -402,24 +327,16 @@ instance Bits a => Bits (Tagged s a) where
     testBit (Tagged a) i = testBit a i
     isSigned (Tagged a) = isSigned a
     bitSize (Tagged a) = bitSize a -- deprecated, but still required :(
-#if MIN_VERSION_base(4,5,0)
     unsafeShiftL (Tagged a) i = Tagged (unsafeShiftL a i)
     unsafeShiftR (Tagged a) i = Tagged (unsafeShiftR a i)
     popCount (Tagged a) = popCount a
-#endif
-#if MIN_VERSION_base(4,7,0)
     bitSizeMaybe (Tagged a) = bitSizeMaybe a
     zeroBits = Tagged zeroBits
-#endif
 
-#if MIN_VERSION_base(4,7,0)
 instance FiniteBits a => FiniteBits (Tagged s a) where
     finiteBitSize (Tagged a) = finiteBitSize a
-# if MIN_VERSION_base(4,8,0)
     countLeadingZeros (Tagged a) = countLeadingZeros a
     countTrailingZeros (Tagged a) = countTrailingZeros a
-# endif
-#endif
 
 instance IsString a => IsString (Tagged s a) where
     fromString = Tagged . fromString
