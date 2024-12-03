@@ -1,5 +1,6 @@
 next [????.??.??]
 -----------------
+* Allow building with GHC 9.12.
 * Drop support for GHC 7.10 and earlier.
 
 0.8.8 [2023.08.08]
