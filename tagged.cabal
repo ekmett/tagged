@@ -53,7 +53,7 @@ library
   other-extensions: CPP
   build-depends:
     base >= 4.9 && < 5,
-    template-haskell >= 2.11 && < 2.23
+    template-haskell >= 2.11 && < 2.24
   ghc-options: -Wall
   hs-source-dirs: src
   exposed-modules:
