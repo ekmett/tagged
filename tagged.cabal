@@ -41,14 +41,6 @@ flag deepseq
   default: True
   manual: True
 
-flag transformers
-  description:
-    You can disable the use of the `transformers` and `transformers-compat` packages using `-f-transformers`.
-    .
-    Disable this is an unsupported configuration, but it may be useful for accelerating builds in sandboxes for expert users.
-  default: True
-  manual: True
-
 library
   default-language: Haskell98
   other-extensions: CPP
@@ -68,6 +60,3 @@ library
 
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.6
-
-  if flag(transformers)
-    build-depends: transformers >= 0.4.2.0 && < 0.7
