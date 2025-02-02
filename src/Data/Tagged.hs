@@ -42,13 +42,9 @@ import Data.Foldable (Foldable(..))
 #ifdef MIN_VERSION_deepseq
 import Control.DeepSeq (NFData(..))
 #endif
-#ifdef MIN_VERSION_transformers
 import Data.Functor.Classes ( Eq1(..), Ord1(..), Read1(..), Show1(..)
-# if !(MIN_VERSION_transformers(0,4,0)) || MIN_VERSION_transformers(0,5,0)
                             , Eq2(..), Ord2(..), Read2(..), Show2(..)
-# endif
                             )
-#endif
 import Control.Monad (liftM)
 import Data.Bifunctor
 #if MIN_VERSION_base(4,10,0)
@@ -154,7 +150,6 @@ instance NFData b => NFData (Tagged s b) where
     rnf (Tagged b) = rnf b
 #endif
 
-#ifdef MIN_VERSION_transformers
 instance Eq1 (Tagged s) where
     liftEq eq (Tagged a) (Tagged b) = eq a b
 
@@ -184,7 +179,6 @@ instance Show2 Tagged where
     liftShowsPrec2 _ _ sp _ n (Tagged b) = showParen (n > 10) $
         showString "Tagged " .
         sp 11 b
-#endif
 
 instance Applicative (Tagged s) where
     pure = Tagged
