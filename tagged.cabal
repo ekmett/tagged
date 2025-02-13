@@ -52,6 +52,7 @@ library
   exposed-modules:
     Data.Proxy.TH
     Data.Tagged
+    Data.Tagged.Foreign
 
   if impl(ghc >= 9.0)
     -- these flags may abort compilation with GHC-8.10
