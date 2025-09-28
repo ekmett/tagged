@@ -37,6 +37,12 @@ proxyPatQ t = sigP (conP proxy_d []) (proxyTypeQ t)
 -- @Proxy :: Proxy [A,B,C]@.
 
 -- TODO: parse a richer syntax for the types involved here so we can include spaces, applications, etc.
+{-# DEPRECATED
+      pr
+      [ "'pr' will be removed in the next release. Use 'Proxy' with @TypeApplications@ instead. "
+      , "Instead of using @[pr|T|]@, use @Proxy \\@T@ instead. "
+      , "Instead of using @[pr|A,B,C|]@, use @Proxy \\@[A,B,C]@ instead. "
+      ] #-}
 pr :: QuasiQuoter
 pr = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) undefined where
   mkProxy :: (TypeQ -> r) -> String -> r
@@ -56,6 +62,11 @@ pr = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) un
 -- of types.
 
 -- TODO: parse a richer syntax for the types involved here so we can include spaces, applications, etc.
+{-# DEPRECATED
+      pr1
+      [ "'pr1' will be removed in the next release. Use 'Proxy' with @TypeApplications@ instead. "
+      , "Instead of using @[pr1|T|]@, use @Proxy \\@'[T]@ instead. "
+      ] #-}
 pr1 :: QuasiQuoter
 pr1 = QuasiQuoter (mkProxy proxyExpQ) (mkProxy proxyPatQ) (mkProxy proxyTypeQ) undefined where
   sing x = AppT (AppT PromotedConsT x) PromotedNilT

@@ -1,5 +1,9 @@
 next [????.??.??]
 -----------------
+* Deprecate `Data.Proxy.TH.{pr,pr1}`, as their functionality has been subsumed
+  by using `Proxy` with `TypeApplications` syntax. For instance, uses of
+  `[pr|T|]` should be migrated to `Proxy @T`. `Data.Proxy.TH` will be removed
+  in the next `tagged` release.
 * Allow disabling the `template-haskell` dependency by disabling a `cabal` flag
   of the same name.
 
