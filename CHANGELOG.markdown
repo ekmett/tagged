@@ -1,3 +1,8 @@
+next [????.??.??]
+-----------------
+* Allow disabling the `template-haskell` dependency by disabling a `cabal` flag
+  of the same name.
+
 0.8.9 [2024.12.03]
 ------------------
 * Allow building with GHC 9.12.
