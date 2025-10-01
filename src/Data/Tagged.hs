@@ -61,9 +61,14 @@ import Data.Data
 import Data.Ix (Ix(..))
 import Data.Semigroup (Semigroup(..))
 import Data.String (IsString(..))
+#ifdef __MHS__
+import Data.Traversable (Traversable(..))
+#endif
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (Storable(..))
+#ifdef __GLASGOW_HASKELL__
 import GHC.Generics (Generic, Generic1)
+#endif
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -76,7 +81,10 @@ import GHC.Generics (Generic, Generic1)
 -- 'Tagged' has kind @k -> * -> *@ if the compiler supports @PolyKinds@, therefore
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
 newtype Tagged s b = Tagged { unTagged :: b }
-  deriving (Eq, Ord, Ix, Bounded, Generic, Generic1)
+  deriving (Eq, Ord, Ix, Bounded)
+#ifdef __GLASGOW_HASKELL__
+  deriving (Generic, Generic1)
+#endif
 
 #ifdef __GLASGOW_HASKELL__
 instance (Data s, Data b) => Data (Tagged s b) where
