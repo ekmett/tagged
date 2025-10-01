@@ -1,5 +1,6 @@
 dist/
 dist-newstyle/
+dist-mcabal/
 .hsenv/
 docs
 wiki
