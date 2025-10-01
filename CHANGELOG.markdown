@@ -6,6 +6,7 @@ next [????.??.??]
   in the next `tagged` release.
 * Allow disabling the `template-haskell` dependency by disabling a `cabal` flag
   of the same name.
+* Support building with MicroHs.
 
 0.8.9 [2024.12.03]
 ------------------
