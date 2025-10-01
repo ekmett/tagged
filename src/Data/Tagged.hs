@@ -81,10 +81,11 @@ import GHC.Generics (Generic, Generic1)
 -- 'Tagged' has kind @k -> * -> *@ if the compiler supports @PolyKinds@, therefore
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
 newtype Tagged s b = Tagged { unTagged :: b }
-  deriving (Eq, Ord, Ix, Bounded)
+  deriving ( Eq, Ord, Ix, Bounded
 #ifdef __GLASGOW_HASKELL__
-  deriving (Generic, Generic1)
+           , Generic, Generic1
 #endif
+           )
 
 #ifdef __GLASGOW_HASKELL__
 instance (Data s, Data b) => Data (Tagged s b) where
