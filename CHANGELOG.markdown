@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+0.8.10 [2025.12.07]
+-------------------
 * Deprecate `Data.Proxy.TH.{pr,pr1}`, as their functionality has been subsumed
   by using `Proxy` with `TypeApplications` syntax. For instance, uses of
   `[pr|T|]` should be migrated to `Proxy @T`. `Data.Proxy.TH` will be removed
