@@ -1,5 +1,5 @@
 name:           tagged
-version:        0.8.10
+version:        0.9
 license:        BSD3
 license-file:   LICENSE
 author:         Edward A. Kmett
@@ -41,14 +41,6 @@ flag deepseq
   default: True
   manual: True
 
-flag template-haskell
-  description:
-    You can disable the use of the `template-haskell` package using `-f-template-haskell`.
-    .
-    Disabling this is an unsupported configuration, but it may be useful for accelerating builds in sandboxes for expert users.
-  default: True
-  manual: True
-
 library
   default-language: Haskell98
   other-extensions: CPP
@@ -66,8 +58,3 @@ library
 
   if flag(deepseq)
     build-depends: deepseq >= 1.1 && < 1.6
-
-  if flag(template-haskell) && impl(ghc)
-    build-depends: template-haskell >= 2.11 && < 2.24
-    exposed-modules:
-      Data.Proxy.TH
