@@ -55,9 +55,7 @@ import Data.Bitraversable (Bitraversable(..))
 import Data.Foldable1 (Foldable1(..))
 import Data.Bifoldable1 (Bifoldable1(..))
 #endif
-#ifdef __GLASGOW_HASKELL__
 import Data.Data
-#endif
 import Data.Ix (Ix(..))
 import Data.Semigroup (Semigroup(..))
 import Data.String (IsString(..))
@@ -66,9 +64,7 @@ import Data.Traversable (Traversable(..))
 #endif
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (Storable(..))
-#ifdef __GLASGOW_HASKELL__
 import GHC.Generics (Generic, Generic1)
-#endif
 
 -- | A @'Tagged' s b@ value is a value @b@ with an attached phantom type @s@.
 -- This can be used in place of the more traditional but less safe idiom of
@@ -81,13 +77,8 @@ import GHC.Generics (Generic, Generic1)
 -- 'Tagged' has kind @k -> * -> *@ if the compiler supports @PolyKinds@, therefore
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
 newtype Tagged s b = Tagged { unTagged :: b }
-  deriving ( Eq, Ord, Ix, Bounded
-#ifdef __GLASGOW_HASKELL__
-           , Generic, Generic1
-#endif
-           )
+  deriving ( Eq, Ord, Ix, Bounded, Generic, Generic1)
 
-#ifdef __GLASGOW_HASKELL__
 instance (Data s, Data b) => Data (Tagged s b) where
   gfoldl f z (Tagged b) = z Tagged `f` b
   toConstr _ = taggedConstr
@@ -105,7 +96,6 @@ taggedConstr = mkConstr taggedDataType "Tagged" [] Prefix
 taggedDataType :: DataType
 taggedDataType = mkDataType "Data.Tagged.Tagged" [taggedConstr]
 {-# INLINE taggedDataType #-}
-#endif
 
 instance Show b => Show (Tagged s b) where
     showsPrec n (Tagged b) = showParen (n > 10) $
