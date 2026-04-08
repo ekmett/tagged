@@ -77,7 +77,7 @@ import GHC.Generics (Generic, Generic1)
 -- 'Tagged' has kind @k -> * -> *@ if the compiler supports @PolyKinds@, therefore
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
 newtype Tagged s b = Tagged { unTagged :: b }
-  deriving ( Eq, Ord, Ix, Bounded, Generic, Generic1)
+  deriving (Eq, Ord, Ix, Bounded, Generic, Generic1)
 
 instance (Data s, Data b) => Data (Tagged s b) where
   gfoldl f z (Tagged b) = z Tagged `f` b
