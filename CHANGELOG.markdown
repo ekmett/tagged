@@ -1,4 +1,4 @@
-0.9 [????.??.??]
+0.9 [2026.09.28]
 ----------------
 * Remove `Data.Proxy.TH`, as its functionality has been subsumed
   by using `Proxy` with `TypeApplications` syntax. This completes the
