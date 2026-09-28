@@ -1,3 +1,8 @@
+next [????.??.??]
+-----------------
+* Include `Data` and `Generic` instances for `Tagged` when building with
+  MicroHs.
+
 0.8.10 [2025.12.07]
 -------------------
 * Deprecate `Data.Proxy.TH.{pr,pr1}`, as their functionality has been subsumed
