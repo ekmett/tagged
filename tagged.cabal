@@ -69,6 +69,6 @@ library
     build-depends: deepseq >= 1.1 && < 1.6
 
   if flag(template-haskell) && impl(ghc)
-    build-depends: template-haskell >= 2.11 && < 2.24
+    build-depends: template-haskell >= 2.11 && < 2.26
     exposed-modules:
       Data.Proxy.TH
