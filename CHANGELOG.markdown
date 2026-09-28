@@ -4,6 +4,11 @@
   by using `Proxy` with `TypeApplications` syntax. This completes the
   deprecation cycle that was introduced in `tagged-0.8.10`.
 
+0.8.11 [2026.09.28]
+-------------------
+* Include `Data` and `Generic` instances for `Tagged` when building with
+  MicroHs.
+
 0.8.10 [2025.12.07]
 -------------------
 * Deprecate `Data.Proxy.TH.{pr,pr1}`, as their functionality has been subsumed
