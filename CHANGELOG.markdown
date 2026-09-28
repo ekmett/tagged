@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+0.8.11 [2026.09.28]
+-------------------
 * Include `Data` and `Generic` instances for `Tagged` when building with
   MicroHs.
 
