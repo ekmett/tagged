@@ -2,6 +2,10 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE Safe #-}
+#if __GLASGOW_HASKELL__ >= 910
+{-# LANGUAGE ExplicitForAll #-}
+{-# LANGUAGE RequiredTypeArguments #-}
+#endif
 
 {-# OPTIONS_GHC -Wno-deprecations #-}
 ----------------------------------------------------------------------------
@@ -20,6 +24,9 @@ module Data.Tagged
     (
     -- * Tagged values
       Tagged(..)
+#if __GLASGOW_HASKELL__ >= 910
+    , taggedBy
+#endif
     , retag
     , untag
     , tagSelf
@@ -78,6 +85,31 @@ import GHC.Generics (Generic, Generic1)
 -- there is an extra @k@ showing in the instance haddocks that may cause confusion.
 newtype Tagged s b = Tagged { unTagged :: b }
   deriving (Eq, Ord, Ix, Bounded, Generic, Generic1)
+
+#if __GLASGOW_HASKELL__ >= 910
+-- | Tag a value with an explicitly supplied type argument.
+--
+-- @
+-- 'unTagged' ('taggedBy' s b) ≡ b
+-- @
+--
+-- Naming the tag at the call site is useful when several arguments have
+-- the same underlying type:
+--
+-- >>> :set -XDataKinds -XRequiredTypeArguments
+-- >>> let helper :: Tagged "foo" Int -> Tagged "bar" Int -> (Int, Int); helper foo bar = (unTagged foo, unTagged bar)
+-- >>> helper (taggedBy "foo" 3) (taggedBy "bar" 7)
+-- (3,7)
+--
+-- The tag is a required type argument, written without @\@@. An explicit
+-- @_@ may be used to infer it. The type argument is erased at runtime.
+--
+-- Available with GHC 9.10.1 and later. Call sites using this syntax require
+-- @RequiredTypeArguments@, and type-level strings require @DataKinds@.
+taggedBy :: forall s -> forall b. b -> Tagged s b
+taggedBy _ = Tagged
+{-# INLINE taggedBy #-}
+#endif
 
 instance (Data s, Data b) => Data (Tagged s b) where
   gfoldl f z (Tagged b) = z Tagged `f` b
@@ -386,7 +418,7 @@ untagSelf (Tagged x) = x
 
 -- | Convert from a 'Tagged' representation to a representation
 -- based on a 'Proxy'.
-proxy :: Tagged s a -> proxy s -> a
+proxy :: Tagged s a -> p s -> a
 proxy (Tagged x) _ = x
 {-# INLINE proxy #-}
 
@@ -397,7 +429,7 @@ unproxy f = Tagged (f Proxy)
 {-# INLINE unproxy #-}
 
 -- | Another way to convert a proxy to a tag.
-tagWith :: proxy s -> a -> Tagged s a
+tagWith :: p s -> a -> Tagged s a
 tagWith _ = Tagged
 {-# INLINE tagWith #-}
 
@@ -411,5 +443,5 @@ tagWith _ = Tagged
 -- reproxySucc :: proxy n -> 'Proxy' (Succ n)
 -- reproxySucc = 'reproxy'
 -- @
-reproxy :: proxy a -> Proxy b
+reproxy :: p a -> Proxy b
 reproxy _ = Proxy
