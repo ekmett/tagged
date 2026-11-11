@@ -11,7 +11,7 @@
 ----------------------------------------------------------------------------
 -- |
 -- Module     : Data.Tagged
--- Copyright  : 2009-2015 Edward Kmett
+-- Copyright  : 2009-2026 Edward Kmett
 -- License    : BSD3
 --
 -- Maintainer  : Edward Kmett <ekmett@gmail.com>
