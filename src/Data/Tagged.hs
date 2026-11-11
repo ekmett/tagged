@@ -407,6 +407,18 @@ asTaggedTypeOf :: s -> tagged s b -> s
 asTaggedTypeOf = const
 {-# INLINE asTaggedTypeOf #-}
 
+-- | Extract a tagged value, using the second argument to fix the tag's type.
+-- The second argument is not evaluated.
+--
+-- @
+-- 'witness' ('Tagged' b) a ≡ b
+-- @
+--
+-- >>> witness (Tagged 3 :: Tagged Bool Int) True
+-- 3
+--
+-- >>> witness (Tagged 3 :: Tagged Bool Int) undefined
+-- 3
 witness :: Tagged a b -> a -> b
 witness (Tagged b) _ = b
 {-# INLINE witness #-}
